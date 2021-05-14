@@ -1,6 +1,6 @@
 plugins {
-    java
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    java
 
     `maven-publish`
 }
@@ -20,6 +20,7 @@ repositories {
 dependencies {
     implementation("org.codehaus.groovy:groovy-all:3.0.5")
     implementation("net.kyori:adventure-api:4.7.0")
+    implementation("org.jetbrains:annotations:16.0.2")
 
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
 
