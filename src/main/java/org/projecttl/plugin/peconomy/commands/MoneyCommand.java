@@ -19,7 +19,7 @@ import java.util.Objects;
 public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompleter {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             EconomySystem system = new EconomySystem(plugin);
 
