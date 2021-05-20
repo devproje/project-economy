@@ -32,11 +32,11 @@ tasks {
         options.encoding = "UTF-8"
     }
 
-    compileJava {
+    withType<JavaCompile> {
         options.encoding = "UTF-8"
 
-        sourceCompatibility = "16"
-        targetCompatibility = "16"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 
     processResources {

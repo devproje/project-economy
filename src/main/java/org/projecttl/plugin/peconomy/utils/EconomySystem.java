@@ -4,7 +4,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.projecttl.plugin.peconomy.PEconomy;
 
-public record EconomySystem(PEconomy plugin) {
+public class EconomySystem {
+
+    private final PEconomy plugin;
+    public EconomySystem(PEconomy plugin) {
+        this.plugin = plugin;
+    }
 
     public int getMoney(Player player) {
         return plugin.pEconomyConfig().getInt("peconomy.account." + player.getName() + ".amount");

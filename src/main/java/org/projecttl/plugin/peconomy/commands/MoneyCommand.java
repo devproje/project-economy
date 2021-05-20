@@ -16,21 +16,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompleter {
+public class MoneyCommand implements CommandExecutor, TabCompleter {
+
+    private final PEconomy plugin;
+    public MoneyCommand(PEconomy plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
             EconomySystem system = new EconomySystem(plugin);
 
             if (command.getName().equals("peconomy")) {
                 switch (args.length) {
-                    case 0 -> {
+                    case 0:
                         player.sendMessage("<PEconomy> " + ChatColor.GREEN + "You account balance is $" + system.getMoney(player));
                         return true;
-                    }
 
-                    case 3 -> {
+                    case 3:
                         if (!player.isOp()) {
                             if (args[0].equals("send")) {
                                 String targetName = args[1];
@@ -47,13 +52,13 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
                                 return true;
                             }
                         } else {
+                            String targetPlayer = args[1];
+                            int amount = Integer.parseInt(args[2]);
+
+                            Player target = Bukkit.getPlayer(targetPlayer);
+
                             switch (args[0]) {
-                                case "add" -> {
-                                    String targetPlayer = args[1];
-                                    int amount = Integer.parseInt(args[2]);
-
-                                    Player target = Bukkit.getPlayer(targetPlayer);
-
+                                case "add":
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
@@ -61,14 +66,8 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
                                     }
 
                                     return true;
-                                }
 
-                                case "remove" -> {
-                                    String targetPlayer = args[1];
-                                    int amount = Integer.parseInt(args[2]);
-
-                                    Player target = Bukkit.getPlayer(targetPlayer);
-
+                                case "remove":
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
@@ -76,13 +75,8 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
                                     }
 
                                     return true;
-                                }
 
-                                case "set" -> {
-                                    String targetPlayer = args[1];
-                                    int amount = Integer.parseInt(args[2]);
-                                    Player target = Bukkit.getPlayer(targetPlayer);
-
+                                case "set":
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
@@ -90,10 +84,8 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
                                     }
 
                                     return true;
-                                }
                             }
                         }
-                    }
                 }
             }
         }
@@ -108,7 +100,7 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
 
         if (command.getName().equals("peconomy")) {
             switch (args.length) {
-                case 1 -> {
+                case 1:
                     if (sender.isOp()) {
                         commandList.add("add");
                         commandList.add("remove");
@@ -117,25 +109,23 @@ public record MoneyCommand(PEconomy plugin) implements CommandExecutor, TabCompl
 
                     commandList.add("send");
                     return commandList;
-                }
 
-                case 2 -> {
+                case 2:
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         commandList.add(player.getName());
                     }
 
                     return commandList;
-                }
 
-                case 3 -> {
-                    if (sender instanceof Player player) {
+                case 3:
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
                         if (args[0].equals("send")) {
                             commandList.add("" + system.getMoney(player));
 
                             return commandList;
                         }
                     }
-                }
             }
         }
 
