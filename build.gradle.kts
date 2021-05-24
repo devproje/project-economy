@@ -1,6 +1,6 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.0.0"
     java
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 
     `maven-publish`
 }
@@ -21,6 +21,7 @@ dependencies {
     implementation("net.kyori:adventure-api:4.7.0")
 
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    // compileOnly("mysql:mysql-connector-java:8.0.25") MySQL Adapter
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
