@@ -20,7 +20,7 @@ git clone https://github.com/ProjectTL12345/PEconomy.git
 </repositories>
 
 <dependency>
-  <groupId>com.github.projecttl12345</groupId>
+  <groupId>com.github.Projecttl12345</groupId>
   <artifactId>PEconomy</artifactId>
   <version>Tag</version>
 </dependency>
@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.projecttl12345:PEconomy:VERSION'
+  implementation 'com.github.Projecttl12345:PEconomy:VERSION'
 }
 ```
 
@@ -45,6 +45,6 @@ repositories {
 }
 
 dependencies {
-  compileOnly("com.github.projecttl12345:PEconomy:VERSION")
+  compileOnly("com.github.Projecttl12345:PEconomy:VERSION")
 }
 ```
