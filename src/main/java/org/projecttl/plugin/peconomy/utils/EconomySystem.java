@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.projecttl.plugin.peconomy.PEconomy;
 
+@Deprecated
 public class EconomySystem {
 
     private final PEconomy plugin;

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import org.jetbrains.annotations.NotNull;
 import org.projecttl.plugin.peconomy.PEconomy;
-import org.projecttl.plugin.peconomy.utils.EconomySystem;
+import org.projecttl.plugin.peconomy.utils.Economy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,26 +27,33 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            EconomySystem system = new EconomySystem(plugin);
+            Economy system = new Economy(plugin, player);
 
             if (command.getName().equals("peconomy")) {
                 switch (args.length) {
                     case 0:
-                        player.sendMessage("<PEconomy> " + ChatColor.GREEN + "You account balance is $" + system.getMoney(player));
+                        player.sendMessage("<PEconomy> " + ChatColor.GREEN + "You account balance is $" + system.getMoney());
                         return true;
 
                     case 3:
                         if (!player.isOp()) {
                             if (args[0].equals("send")) {
                                 String targetName = args[1];
-                                int amount = Integer.parseInt(args[2]);
-
                                 Player target = Bukkit.getPlayer(targetName);
+
+                                int amount = Integer.parseInt(args[2]);
+                                int result = system.getMoney() - amount;
 
                                 if (!Objects.requireNonNull(target).isOnline()) {
                                     player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                 } else {
-                                    system.sendMoney(player, target, amount);
+                                    if (result <= 0) {
+                                        player.sendMessage(ChatColor.GOLD + "Transaction Failed!");
+                                    } else {
+                                        int getTargetAmount = system.getPlayerMoney(target);
+                                        system.removeMoney(amount);
+                                        system.setPlayerMoney(target, getTargetAmount + amount);
+                                    }
                                 }
 
                                 return true;
@@ -62,7 +69,8 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
-                                        system.addMoney(target, amount);
+                                        int money = system.getPlayerMoney(target);
+                                        system.setPlayerMoney(target, money + amount);
                                     }
 
                                     return true;
@@ -71,7 +79,8 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
-                                        system.removeMoney(target, amount);
+                                        int money = system.getPlayerMoney(target);
+                                        system.setPlayerMoney(target, money - amount);
                                     }
 
                                     return true;
@@ -80,7 +89,7 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
                                     if (!Objects.requireNonNull(target).isOnline()) {
                                         player.sendMessage("<PEconomy> " + ChatColor.YELLOW + target.getName() + ChatColor.GOLD + " is Offline!");
                                     } else {
-                                        system.setMoney(target, amount);
+                                        system.setPlayerMoney(target, amount);
                                     }
 
                                     return true;
@@ -96,7 +105,7 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         ArrayList<String> commandList = new ArrayList<>();
-        EconomySystem system = new EconomySystem(plugin);
+        Economy system = new Economy(plugin, ((Player) sender));
 
         if (command.getName().equals("peconomy")) {
             switch (args.length) {
@@ -119,9 +128,8 @@ public class MoneyCommand implements CommandExecutor, TabCompleter {
 
                 case 3:
                     if (sender instanceof Player) {
-                        Player player = (Player) sender;
                         if (args[0].equals("send")) {
-                            commandList.add("" + system.getMoney(player));
+                            commandList.add("" + system.getMoney());
 
                             return commandList;
                         }
