@@ -2,6 +2,7 @@ package org.projecttl.plugin.peconomy.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.projecttl.plugin.peconomy.PEconomy;
 
 public class Economy {
@@ -11,8 +12,8 @@ public class Economy {
 
     private String accountPath = "peconomy.account";
 
-    public Economy(PEconomy instance, Player player) {
-        this.plugin = instance;
+    public Economy(Plugin instance, Player player) {
+        this.plugin = (PEconomy) instance;
         this.target = player;
     }
 
