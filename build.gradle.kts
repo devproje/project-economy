@@ -1,71 +1,34 @@
 plugins {
-    java
-    id("com.github.johnrengelman.shadow") version "7.0.0"
-
-    `maven-publish`
+    kotlin("jvm") version "1.5.21"
+    id("org.jetbrains.dokka") version "1.5.0"
 }
 
-group = properties["pluginGroup"]!!
-version = properties["pluginVersion"]!!
+group = "net.projecttl"
+version = "1.3.0"
 
-repositories {
-    mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://jitpack.io")
-    maven(url = "https://oss.sonatype.org/content/repositories/snapshots/") {
-        name = "sonatype-oss-snapshots"
+allprojects {
+    repositories {
+        mavenCentral()
     }
 }
 
-dependencies {
-    implementation("net.kyori:adventure-api:4.7.0")
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.dokka")
 
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    // compileOnly("mysql:mysql-connector-java:8.0.25") MySQL Adapter
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-}
-
-tasks {
-    javadoc {
-        options.encoding = "UTF-8"
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
-    }
-
-    processResources {
-        filesMatching("*.yml") {
-            expand(project.properties)
+    repositories {
+        mavenCentral()
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://jitpack.io")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots/") {
+            name = "sonatype-oss-snapshots"
         }
     }
 
-    create<Jar>("sourceJar") {
-        archiveClassifier.set("source")
-        from(sourceSets["main"].allSource)
-    }
-
-    shadowJar {
-        archiveBaseName.set(project.name)
-        archiveVersion.set(project.version.toString())
-        archiveClassifier.set("")
-    }
-
-    getByName<Test>("test") {
-        useJUnitPlatform()
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>(project.name) {
-            artifact(tasks["sourceJar"])
-            from(components["java"])
-        }
+    dependencies {
+        implementation(kotlin("stdlib"))
+        implementation("net.kyori:adventure-api:4.7.0")
+        compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+        compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
     }
 }
