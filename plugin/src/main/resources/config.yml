@@ -1,4 +1,14 @@
-SQL_IP:
-SQL_USERNAME:
-SQL_PASSWORD:
-SQL_PORT:
+SQL_IP: ""
+SQL_USERNAME: ""
+SQL_PASSWORD: ""
+SQL_PORT: 3306
+
+USE_DEFAULT_EXCHANGE: true
+
+wheat: 100
+potato: 500
+iron_ingot: 1000
+gold_ingot: 5000
+diamond: 10000
+netherite: 50000
+emerald: 1000
