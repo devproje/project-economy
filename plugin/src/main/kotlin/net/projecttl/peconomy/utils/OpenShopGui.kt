@@ -11,9 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 fun openGui(plugin: PEconomy, player: Player) {
-    val enable: Boolean = plugin.config.getBoolean("USE_DEFAULT_EXCHANGE")
-    if (enable) {
-        player.openInventory(plugin.gui(InventoryType.CHEST_27, Component.text("${ChatColor.GREEN}SHOP")) {
+    player.openInventory(plugin.gui(InventoryType.CHEST_27, Component.text("${ChatColor.GREEN}SHOP")) {
             val moneySystem = Economy(player)
             val wheat = ItemStack(Material.WHEAT).let {
                 val itemMeta = it.itemMeta
@@ -105,85 +103,59 @@ fun openGui(plugin: PEconomy, player: Player) {
             }
 
             for (i in 0..26) {
-                slot(i, voidGlass)
+                slot(i, voidGlass) {
+                    this.isCancelled = true
+                }
             }
 
-            slot(4, checkBalance)
+            slot(4, checkBalance) {
+                this.isCancelled = true
+            }
+
             slot(26, exitItem) {
                 player.closeInventory()
+                this.isCancelled = true
             }
 
             slot(10, wheat) {
-                if (!player.inventory.contains(ItemStack(Material.WHEAT))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough wheat.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.WHEAT, 1))
-                    moneySystem.addMoney(plugin.config.getInt("wheat"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.WHEAT, 1), plugin.config.getInt("wheat"))
+                this.isCancelled = true
             }
 
             slot(11, potato) {
-                if (!player.inventory.contains(ItemStack(Material.POTATO))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough potato.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.POTATO, 1))
-                    moneySystem.addMoney(plugin.config.getInt("potato"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.POTATO, 1), plugin.config.getInt("potato"))
+                this.isCancelled = true
             }
 
             slot(12, iron) {
-                if (!player.inventory.contains(ItemStack(Material.IRON_INGOT))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough iron ingot.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.IRON_INGOT, 1))
-                    moneySystem.addMoney(plugin.config.getInt("iron_ingot"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.IRON_INGOT, 1), plugin.config.getInt("iron_ingot"))
+                this.isCancelled = true
             }
 
             slot(13, gold) {
-                if (!player.inventory.contains(ItemStack(Material.GOLD_INGOT))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough gold ingot.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.GOLD_INGOT, 1))
-                    moneySystem.addMoney(plugin.config.getInt("gold_ingot"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.GOLD_INGOT, 1), plugin.config.getInt("gold_ingot"))
+                this.isCancelled = true
             }
 
             slot(14, diamond) {
-                if (!player.inventory.contains(ItemStack(Material.DIAMOND))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough diamond.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.DIAMOND, 1))
-                    moneySystem.addMoney(plugin.config.getInt("diamond"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.DIAMOND, 1), plugin.config.getInt("diamond"))
+                this.isCancelled = true
             }
 
             slot(15, netherite) {
-                if (!player.inventory.contains(ItemStack(Material.NETHERITE_INGOT))) {
-                    player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough netherite ingot.")
-                } else {
-                    player.inventory.removeItem(ItemStack(Material.NETHERITE_INGOT, 1))
-                    moneySystem.addMoney(plugin.config.getInt("netherite"))
-                }
+                moneySystem.sellWithItem(ItemStack(Material.NETHERITE_INGOT, 1), plugin.config.getInt("netherite"))
+                this.isCancelled = true
             }
 
             slot(16, emerald) {
                 if (this.isLeftClick) {
-                    if (!player.inventory.contains(ItemStack(Material.EMERALD))) {
-                        player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough emerald.")
-                    } else {
-                        player.inventory.removeItem(ItemStack(Material.EMERALD, 1))
-                        moneySystem.addMoney(plugin.config.getInt("emerald"))
-                    }
+                    moneySystem.sellWithItem(ItemStack(Material.EMERALD, 1), plugin.config.getInt("emerald"))
                 } else if (this.isRightClick) {
-                    if (plugin.config.getInt("emerald") > moneySystem.money) {
-                        player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough money.")
-                    } else {
-                        player.inventory.addItem(ItemStack(Material.EMERALD, 1))
-                        moneySystem.removeMoney(plugin.config.getInt("emerald"))
-                    }
+                    moneySystem.exchangeWithItem(ItemStack(Material.EMERALD, 1), plugin.config.getInt("emerald"))
                 }
+
+                this.isCancelled = true
             }
-        })
-    }
+        }
+    )
 }

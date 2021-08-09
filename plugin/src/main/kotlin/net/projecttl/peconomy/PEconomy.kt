@@ -18,6 +18,10 @@ class PEconomy : JavaPlugin() {
             tabCompleter = MoneyCommand(this@PEconomy)
         }
 
+        getCommand("exchange")?.apply {
+            setExecutor(MoneyCommand(this@PEconomy))
+        }
+
         server.pluginManager.apply {
             registerEvents(RegisterListener(), this@PEconomy)
         }

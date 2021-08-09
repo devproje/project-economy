@@ -97,29 +97,10 @@ class MoneyCommand(private val plugin: PEconomy): CommandExecutor, TabCompleter 
                     true
                 }
 
-                "exchange" -> {
-                    val enableCommand = args[1]
-
-                    if (enableCommand == "true") {
-                        plugin.config.set("USE_DEFAULT_EXCHANGE", true)
-                    } else if (enableCommand == "false") {
-                        plugin.config.set("USE_DEFAULT_EXCHANGE", false)
-                    }
-
-                    true
-                }
-
                 else -> false
             }
         } else if (command.name == "exchange") {
-            val enable: Boolean = plugin.config.getBoolean("USE_DEFAULT_EXCHANGE")
-
-            if (!enable) {
-                sender.sendMessage("<PEconomy> Exchange is disabled!")
-            } else {
-                openGui(plugin, sender as Player)
-            }
-
+            openGui(plugin, sender as Player)
             return true
         }
 

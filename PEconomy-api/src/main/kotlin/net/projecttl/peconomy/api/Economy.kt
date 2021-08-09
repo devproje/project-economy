@@ -2,6 +2,7 @@ package net.projecttl.peconomy.api
 
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 class Economy(private val player: Player) {
 
@@ -31,6 +32,19 @@ class Economy(private val player: Player) {
                     "${ChatColor.GREEN}UUID: ${ChatColor.RESET}${resultSets.getString(3)}\n" +
                     "${ChatColor.GREEN}BALANCE: ${ChatColor.RESET}${resultSets.getInt(4)}₩\n" +
                     "${ChatColor.GOLD}===============================================")
+        }
+    }
+
+    fun sellWithItem(item: ItemStack, amount: Int) {
+        // TODO Logic
+    }
+
+    fun exchangeWithItem(item: ItemStack, amount: Int) {
+        if (amount > money) {
+            player.sendMessage("ERROR")
+        } else {
+            removeMoney(amount)
+            player.inventory.addItem(item)
         }
     }
 

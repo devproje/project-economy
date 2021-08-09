@@ -3,8 +3,6 @@ SQL_USERNAME: ""
 SQL_PASSWORD: ""
 SQL_PORT: 3306
 
-USE_DEFAULT_EXCHANGE: true
-
 wheat: 100
 potato: 500
 iron_ingot: 1000

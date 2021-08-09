@@ -9,3 +9,8 @@ commands:
     usage: /peconomy <option> <target_player> <amount>
     aliases:
       - money
+  exchange:
+    description: This is money command
+    usage: /exchange
+    aliases:
+      - ex
