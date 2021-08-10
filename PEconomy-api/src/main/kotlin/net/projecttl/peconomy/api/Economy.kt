@@ -1,7 +1,9 @@
 package net.projecttl.peconomy.api
 
 import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class Economy(private val player: Player) {
@@ -36,13 +38,20 @@ class Economy(private val player: Player) {
     }
 
     fun sellWithItem(item: ItemStack, amount: Int) {
-        // TODO Logic
+        if (!player.inventory.containsAtLeast(item, item.amount)) {
+            player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough ${item.type.name.lowercase()} in your inventory")
+        } else {
+            player.playSound(player.location, Sound.ENTITY_ARROW_HIT_PLAYER, 1F, 0F)
+            player.inventory.removeItem(item)
+            addMoney(amount)
+        }
     }
 
     fun exchangeWithItem(item: ItemStack, amount: Int) {
         if (amount > money) {
-            player.sendMessage("ERROR")
+            player.sendMessage("<PEconomy> ${ChatColor.RED}Not enough balance in your account")
         } else {
+            player.playSound(player.location, Sound.ENTITY_ARROW_HIT_PLAYER, 1F, 1F)
             removeMoney(amount)
             player.inventory.addItem(item)
         }
