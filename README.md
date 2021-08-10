@@ -1,5 +1,5 @@
 # PBalance
-This is minecraft plugin money system.
+This is minecraft plugin money system with MySQL.
 
 ## How to build
 If you want to build this plugin please follow this command.
@@ -35,18 +35,17 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.Projecttl12345:PEconomy:VERSION'
+  implementation 'net.projecttl:PBalance-api:VERSION'
 }
 ```
 
 * Kotlin Gradle DSL
 ```kotlin
 repositories {
-  ...
-  maven("https://jitpack.io")
+  mavenCentral()
 }
 
 dependencies {
-  compileOnly("com.github.Projecttl12345:PEconomy:VERSION")
+  compileOnly("net.projecttl:PBalance-api:VERSION")
 }
 ```
