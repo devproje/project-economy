@@ -20,6 +20,12 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
             }
 
             return when (args[0]) {
+                "rank" -> {
+                    val moneySystem = Economy(sender as Player)
+                    moneySystem.getRanking()
+                    true
+                }
+
                 "set" -> {
                     if (sender.isOp) {
                         val target = args[1]
@@ -113,6 +119,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
 
             when (args.size) {
                 1 -> {
+                    commandList.add("rank")
                     commandList.add("set")
                     commandList.add("send")
                     commandList.add("balance")

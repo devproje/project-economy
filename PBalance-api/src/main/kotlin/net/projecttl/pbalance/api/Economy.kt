@@ -25,6 +25,32 @@ class Economy(private val player: Player) {
         money -= amount
     }
 
+    fun getRanking() {
+        val resultSets = statement.executeQuery("SELECT * FROM PBalance.account ORDER BY length(amount) desc, amount desc;")
+        var i = 1
+        while (resultSets.next()) {
+            when (i) {
+                1 -> {
+                    player.sendMessage("${i}st: ${resultSets.getString(2)} => ${resultSets.getInt(4)}₩")
+                }
+
+                2 -> {
+                    player.sendMessage("${i}nd: ${resultSets.getString(2)} => ${resultSets.getInt(4)}₩")
+                }
+
+                3 -> {
+                    player.sendMessage("${i}rd: ${resultSets.getString(2)} => ${resultSets.getInt(4)}₩")
+                }
+
+                else -> {
+                    player.sendMessage("${i}th: ${resultSets.getString(2)} => ${resultSets.getInt(4)}₩")
+                }
+            }
+
+            i++
+        }
+    }
+
     fun queryList() {
         val resultSets = statement.executeQuery("select * from account;")
         while (resultSets.next()) {
