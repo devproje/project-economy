@@ -58,7 +58,7 @@ class Economy(private val player: Player) {
     }
 
     private fun queryMoney(): Int {
-        val resultSet = statement.executeQuery("select amount from PEconomy.account where username = '${player.name}' and uuid = '${player.uniqueId}'")
+        val resultSet = statement.executeQuery("select amount from PBalance.account where username = '${player.name}' and uuid = '${player.uniqueId}'")
         var result: Int? = null
 
         if (resultSet.next()) {
@@ -69,6 +69,6 @@ class Economy(private val player: Player) {
     }
 
     fun registerAccount() {
-        statement.executeUpdate("insert into PEconomy.account values(NULL, '${player.name}', '${player.uniqueId}', 0);")
+        statement.executeUpdate("insert into PBalance.account values(NULL, '${player.name}', '${player.uniqueId}', 0);")
     }
 }
