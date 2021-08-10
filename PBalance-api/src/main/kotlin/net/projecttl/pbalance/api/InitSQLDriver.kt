@@ -1,4 +1,4 @@
-package net.projecttl.peconomy.api
+package net.projecttl.pbalance.api
 
 import org.bukkit.plugin.Plugin
 import java.sql.Connection
@@ -35,8 +35,8 @@ class InitSQLDriver(private val plugin: Plugin) {
 
 
         val statement: Statement = sqlConnection.createStatement()
-        statement.executeUpdate("create database if not exists PEconomy default character set utf8;")
-        statement.executeUpdate("use PEconomy;")
+        statement.executeUpdate("create database if not exists PBalance default character set utf8;")
+        statement.executeUpdate("use PBalance;")
         statement.executeUpdate("create table if not exists account(" +
                 "id int not null AUTO_INCREMENT," +
                 "username varchar(25)  not null," +

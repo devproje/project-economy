@@ -1,6 +1,6 @@
-package net.projecttl.peconomy.listeners
+package net.projecttl.pbalance.listeners
 
-import net.projecttl.peconomy.api.Economy
+import net.projecttl.pbalance.api.Economy
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent

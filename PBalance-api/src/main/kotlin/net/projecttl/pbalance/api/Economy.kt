@@ -1,4 +1,4 @@
-package net.projecttl.peconomy.api
+package net.projecttl.pbalance.api
 
 import org.bukkit.ChatColor
 import org.bukkit.Sound
@@ -14,7 +14,7 @@ class Economy(private val player: Player) {
         get() = queryMoney()
 
         set(amount) {
-            statement.executeUpdate("update PEconomy.account set amount = $amount where username = '${player.name}' or uuid = '${player.uniqueId}';")
+            statement.executeUpdate("update PBalance.account set amount = $amount where username = '${player.name}' or uuid = '${player.uniqueId}';")
         }
 
     fun addMoney(amount: Int) {

@@ -1,3 +1,3 @@
-rootProject.name = "PEconomy"
-include("PEconomy-api")
+rootProject.name = "PBalance"
+include("PBalance-api")
 include("plugin")

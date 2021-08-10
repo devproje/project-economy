@@ -1,4 +1,4 @@
-# PEconomy
+# PBalance
 This is minecraft plugin money system.
 
 ## How to build
@@ -13,23 +13,25 @@ git clone https://github.com/ProjectTL12345/PEconomy.git
 * Maven
 ```xml
 <repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
+    <repository>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <id>central</id>
+        <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
 </repositories>
 
 <dependency>
-  <groupId>com.github.Projecttl12345</groupId>
-  <artifactId>PEconomy</artifactId>
+  <groupId>net.projecttl</groupId>
+  <artifactId>PBalance-api</artifactId>
   <version>Tag</version>
 </dependency>
 ```
 * Groovy Gradle DSL
 ```groovy
 repositories {
-  ...
-  maven { url 'https://jitpack.io' }
+  mavenCentral()
 }
 
 dependencies {

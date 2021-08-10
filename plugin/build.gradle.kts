@@ -10,17 +10,6 @@ dependencies {
 }
 
 tasks {
-    javadoc {
-        options.encoding = "UTF-8"
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-
-        sourceCompatibility = "16"
-        targetCompatibility = "16"
-    }
-
     processResources {
         filesMatching("*.yml") {
             expand(project.properties)
@@ -36,9 +25,5 @@ tasks {
         archiveBaseName.set(rootProject.name)
         archiveVersion.set("")
         archiveClassifier.set("")
-    }
-
-    getByName<Test>("test") {
-        useJUnitPlatform()
     }
 }

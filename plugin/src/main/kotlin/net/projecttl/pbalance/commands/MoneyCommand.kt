@@ -1,8 +1,8 @@
-package net.projecttl.peconomy.commands
+package net.projecttl.pbalance.commands
 
-import net.projecttl.peconomy.PEconomy
-import net.projecttl.peconomy.api.Economy
-import net.projecttl.peconomy.utils.openGui
+import net.projecttl.pbalance.PBalance
+import net.projecttl.pbalance.api.Economy
+import net.projecttl.pbalance.utils.openGui
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -11,10 +11,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-class MoneyCommand(private val plugin: PEconomy): CommandExecutor, TabCompleter {
+class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.name == "peconomy") {
+        if (command.name == "pbalance") {
             if (args.isEmpty()) {
                 return false
             }
