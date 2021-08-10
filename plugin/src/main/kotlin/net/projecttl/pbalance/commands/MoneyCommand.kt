@@ -108,7 +108,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String>? {
-        if (command.name == "peconomy") {
+        if (command.name == "pbalance") {
             val commandList = mutableListOf<String>()
 
             when (args.size) {
