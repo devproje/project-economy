@@ -18,10 +18,6 @@ class PBalance : JavaPlugin() {
             tabCompleter = MoneyCommand(this@PBalance)
         }
 
-        getCommand("exchange")?.apply {
-            setExecutor(MoneyCommand(this@PBalance))
-        }
-
         server.pluginManager.apply {
             registerEvents(RegisterListener(), this@PBalance)
         }

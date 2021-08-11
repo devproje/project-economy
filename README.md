@@ -1,11 +1,16 @@
 # PBalance
-This is minecraft plugin money system with MySQL.
+This is minecraft plugin MySQL money system.
 
-## How to build
-If you want to build this plugin please follow this command.
+## Command List
+This is plugin command /pbalance or /money
+- Show account balance
+```mclang
+/money balance
+```
 
-```sh
-git clone https://github.com/ProjectTL12345/PEconomy.git
+- Send money
+```mclang
+/money send <another_player>
 ```
 
 ## How to use API

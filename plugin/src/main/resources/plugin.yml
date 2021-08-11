@@ -9,8 +9,3 @@ commands:
     usage: /pbalance <option> <target_player> <amount>
     aliases:
       - money
-  exchange:
-    description: This exchanger gui
-    usage: /exchange
-    aliases:
-      - ex

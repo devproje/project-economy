@@ -3,19 +3,9 @@ SQL_USERNAME: ""
 SQL_PASSWORD: ""
 SQL_PORT: 3306
 
-wheat: 100
-potato: 200
-carrot: 500
-beetroot: 750
-melon_slice: 1000
-sugar_cane: 50
-pumpkin: 1500
-
-copper: 75
-cobblestone: 300
-iron_ingot: 1500
-gold_ingot: 3000
-diamond: 5000
-netherite: 50000
-emerald: 10000
-
+DATABASE: "PBalance"
+TABLE: "account"
+USERNAME: "username"
+UUID: "uuid"
+BALANCE: "amount"
+MONEY_UNIT: "₩"
