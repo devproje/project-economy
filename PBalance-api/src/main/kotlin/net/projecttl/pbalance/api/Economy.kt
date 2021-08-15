@@ -2,6 +2,7 @@ package net.projecttl.pbalance.api
 
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Economy(private val player: Player) {
@@ -23,6 +24,29 @@ class Economy(private val player: Player) {
 
     fun removeMoney(amount: Int) {
         money -= amount
+    }
+
+    fun buy(item: ItemStack, amount: Int) {
+        if (amount > money) {
+            player.sendMessage("<PBalance> ${ChatColor.RED}Not enough balance in your account!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        } else {
+            removeMoney(amount)
+            player.inventory.addItem(item)
+            player.sendMessage("<PBalance> ${ChatColor.GREEN}You're successful bought ${item.amount} ${item.itemMeta?.displayName}!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        }
+    }
+
+    fun sell(item: ItemStack, amount: Int) {
+        if (player.inventory.containsAtLeast(item, item.amount)) {
+            player.inventory.removeItem(item)
+            addMoney(amount)
+            player.sendMessage("<PBalance> ${ChatColor.GREEN}You're successful sell ${item.amount} ${item.itemMeta?.displayName}!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        } else {
+            player.sendMessage("<PBalance> ${ChatColor.RED}Not enough item!")
+        }
     }
 
     fun getRanking() {

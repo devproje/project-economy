@@ -9,3 +9,4 @@ USERNAME: "username"
 UUID: "uuid"
 BALANCE: "amount"
 MONEY_UNIT: "₩"
+COMMAND_ENABLED: true

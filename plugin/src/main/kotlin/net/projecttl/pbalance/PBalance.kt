@@ -13,9 +13,12 @@ class PBalance : JavaPlugin() {
         }
 
         InitSQLDriver(this).loadSQLModule()
-        getCommand("pbalance")?.apply {
-            setExecutor(MoneyCommand(this@PBalance))
-            tabCompleter = MoneyCommand(this@PBalance)
+
+        if (InitSQLDriver.commandEnabled == true) {
+            getCommand("pbalance")?.apply {
+                setExecutor(MoneyCommand(this@PBalance))
+                tabCompleter = MoneyCommand(this@PBalance)
+            }
         }
 
         server.pluginManager.apply {

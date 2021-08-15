@@ -10,28 +10,31 @@ class InitSQLDriver(private val plugin: Plugin) {
     companion object {
         lateinit var sqlConnection: Connection
 
-        var database: String?  = null
-        var table: String?     = null
-        var username: String?  = null
-        var uuid: String?      = null
-        var balance: String?   = null
-        var moneyUnit: String? = null
+        var database: String?        = null
+        var table: String?           = null
+        var username: String?        = null
+        var uuid: String?            = null
+        var balance: String?         = null
+        var moneyUnit: String?       = null
+        var commandEnabled: Boolean? = null
     }
 
-    private val inlineDatabase  = plugin.config.getString("DATABASE")
-    private val inlineTable     = plugin.config.getString("TABLE")
-    private val inlineUsername  = plugin.config.getString("USERNAME")
-    private val inlineUuid      = plugin.config.getString("UUID")
-    private val inlineBalance   = plugin.config.getString("BALANCE")
-    private val inlineMoneyUnit = plugin.config.getString("MONEY_UNIT")
+    private val inlineDatabase       = plugin.config.getString("DATABASE")
+    private val inlineTable          = plugin.config.getString("TABLE")
+    private val inlineUsername       = plugin.config.getString("USERNAME")
+    private val inlineUuid           = plugin.config.getString("UUID")
+    private val inlineBalance        = plugin.config.getString("BALANCE")
+    private val inlineMoneyUnit      = plugin.config.getString("MONEY_UNIT")
+    private val inlineCommandEnabled = plugin.config.getBoolean("COMMAND_ENABLED")
 
     init {
-        database  = inlineDatabase
-        table     = inlineTable
-        username  = inlineUsername
-        uuid      = inlineUuid
-        balance   = inlineBalance
-        moneyUnit = inlineMoneyUnit
+        database       = inlineDatabase
+        table          = inlineTable
+        username       = inlineUsername
+        uuid           = inlineUuid
+        balance        = inlineBalance
+        moneyUnit      = inlineMoneyUnit
+        commandEnabled = inlineCommandEnabled
     }
 
     fun loadSQLModule() {
