@@ -3,6 +3,7 @@ package net.projecttl.pbalance
 import net.projecttl.pbalance.commands.MoneyCommand
 import net.projecttl.pbalance.listeners.RegisterListener
 import net.projecttl.pbalance.api.InitSQLDriver
+import net.projecttl.pbalance.commands.ExchangerCommand
 import org.bukkit.plugin.java.JavaPlugin
 
 class PBalance : JavaPlugin() {
@@ -18,6 +19,10 @@ class PBalance : JavaPlugin() {
             getCommand("pbalance")?.apply {
                 setExecutor(MoneyCommand(this@PBalance))
                 tabCompleter = MoneyCommand(this@PBalance)
+            }
+
+            getCommand("exchanger")?.apply {
+                setExecutor(ExchangerCommand(this@PBalance))
             }
         }
 

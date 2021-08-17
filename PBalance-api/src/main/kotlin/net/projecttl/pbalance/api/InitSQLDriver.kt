@@ -5,6 +5,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Statement
+import kotlin.system.exitProcess
 
 class InitSQLDriver(private val plugin: Plugin) {
     companion object {
@@ -17,6 +18,7 @@ class InitSQLDriver(private val plugin: Plugin) {
         var balance: String?         = null
         var moneyUnit: String?       = null
         var commandEnabled: Boolean? = null
+        var exchangeGUI: Boolean?    = null
     }
 
     private val inlineDatabase       = plugin.config.getString("DATABASE")
@@ -26,6 +28,7 @@ class InitSQLDriver(private val plugin: Plugin) {
     private val inlineBalance        = plugin.config.getString("BALANCE")
     private val inlineMoneyUnit      = plugin.config.getString("MONEY_UNIT")
     private val inlineCommandEnabled = plugin.config.getBoolean("COMMAND_ENABLED")
+    private val inlineExchangeGUI    = plugin.config.getBoolean("EXCHANGE_GUI")
 
     init {
         database       = inlineDatabase
@@ -35,6 +38,7 @@ class InitSQLDriver(private val plugin: Plugin) {
         balance        = inlineBalance
         moneyUnit      = inlineMoneyUnit
         commandEnabled = inlineCommandEnabled
+        exchangeGUI    = inlineExchangeGUI
     }
 
     fun loadSQLModule() {

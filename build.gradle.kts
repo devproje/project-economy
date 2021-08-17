@@ -28,7 +28,8 @@ subprojects {
     dependencies {
         implementation(kotlin("stdlib"))
         implementation("net.kyori:adventure-api:4.7.0")
-        compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+        implementation("net.projecttl:InventoryGUI-api:4.0.5")
+        compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
         compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
     }
 }

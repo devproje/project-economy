@@ -10,3 +10,20 @@ UUID: "uuid"
 BALANCE: "amount"
 MONEY_UNIT: "₩"
 COMMAND_ENABLED: true
+EXCHANGE_GUI: true
+
+wheat_cost: 100
+potato_cost: 100
+carrot_cost: 100
+sugarcane_cost: 75
+pumpkin_cost: 500
+melon_slice_cost: 250
+cake_cost: 1000
+
+cobblestone_cost: 100
+copper_ingot_cost: 75
+iron_ingot_cost: 250
+gold_ingot_cost: 500
+diamond_cost: 750
+netherite_ingot_cost: 10000
+emerald_cost: 1000
