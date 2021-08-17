@@ -59,7 +59,9 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
                 }
             }
 
-            slot(44, exitItem)
+            slot(44, exitItem) {
+                player.closeInventory()
+            }
 
             for (i in 10..16) {
                 slot(i, plants()[i]!!) {
