@@ -36,6 +36,14 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
     fun openExchange() {
         val system = Economy(player)
         player.gui(plugin, InventoryType.CHEST_45, Component.text("${ChatColor.GREEN}EXCHANGER")) {
+            val compass = ItemStack(Material.COMPASS).let {
+                val itemMeta = it.itemMeta
+                itemMeta?.setDisplayName("CHECKING MONEY")
+                itemMeta?.lore = listOf("If you wanna see your account, click me!")
+                it.itemMeta = itemMeta
+
+                it
+            }
             val voidItem = ItemStack(Material.BLACK_STAINED_GLASS_PANE).let {
                 val itemMeta = it.itemMeta
                 itemMeta?.setDisplayName("${ChatColor.GRAY}VOID ITEM")
@@ -59,6 +67,10 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
                 }
             }
 
+            slot(4, compass) {
+                player.sendMessage("Your account balance: ${ChatColor.GREEN}${system.money}${moneyUnit()}")
+            }
+
             slot(44, exitItem) {
                 player.closeInventory()
             }
@@ -67,7 +79,7 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
                 slot(i, plants()[i]!!) {
                     when {
                         this.isLeftClick -> {
-                            system.sell(plantsItem[i]!!, 1)
+                            system.sell(plantsItem[i]!!, plantsAmount()[i]!!)
                         }
                     }
 
@@ -75,11 +87,11 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
                 }
             }
 
-            for (i in 19..25) {
+            for (i in 19..24) {
                 slot(i, resources()[i]!!) {
                     when {
                         this.isLeftClick -> {
-                            system.sell(resourcesItem[i]!!, 1)
+                            system.sell(resourcesItem[i]!!, resourcesAmount()[i]!!)
                         }
                     }
 
@@ -87,11 +99,11 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
                 }
             }
 
-            slot(25, resourcesItem[25]!!) {
+            slot(25, resources()[25]!!) {
                 if (isLeftClick) {
-                    system.sell(resourcesItem[25]!!, 1)
+                    system.sell(resourcesItem[25]!!, resourcesAmount()[25]!!)
                 } else if (isRightClick) {
-                    system.buy(resourcesItem[25]!!, 1)
+                    system.buy(resourcesItem[25]!!, resourcesAmount()[25]!!)
                 }
 
                 isCancelled = true
@@ -103,42 +115,56 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
         val wheat      = ItemStack(Material.WHEAT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineWheat}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val potato     = ItemStack(Material.POTATO).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlinePotato}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val carrot     = ItemStack(Material.CARROT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineCarrot}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val sugarCane  = ItemStack(Material.SUGAR_CANE).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineSugarCane}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val pumpkin    = ItemStack(Material.PUMPKIN).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlinePumpkin}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val melonSlice = ItemStack(Material.MELON_SLICE).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineMelonSlice}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val cake       = ItemStack(Material.CAKE).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineCake}${moneyUnit()}")
+
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
@@ -153,46 +179,65 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
         )
     }
 
+    private fun plantsAmount(): Map<Int, Int> {
+        return mapOf(
+            10 to inlineWheat,
+            11 to inlinePotato,
+            12 to inlineCarrot,
+            13 to inlineSugarCane,
+            14 to inlinePumpkin,
+            15 to inlineMelonSlice,
+            16 to inlineCake
+        )
+    }
+
     private fun resources(): Map<Int, ItemStack> {
         val cobblestone    = ItemStack(Material.COBBLESTONE).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineCobbleStone}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val copperIngot    = ItemStack(Material.COPPER_INGOT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineCopperIngot}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val ironIngot      = ItemStack(Material.IRON_INGOT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineIronIngot}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val goldIngot      = ItemStack(Material.GOLD_INGOT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineGoldIngot}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val diamond        = ItemStack(Material.DIAMOND).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineDiamond}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val netheriteIngot = ItemStack(Material.NETHERITE_INGOT).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineNetheriteIngot}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
         val emerald        = ItemStack(Material.EMERALD).let { itemStack ->
             val itemMeta = itemStack.itemMeta
             itemMeta?.lore = listOf("Cost: ${inlineEmerald}${moneyUnit()}")
+            itemStack.itemMeta = itemMeta
             itemStack
         }
 
@@ -204,6 +249,18 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
             23 to diamond,
             24 to netheriteIngot,
             25 to emerald
+        )
+    }
+
+    private fun resourcesAmount(): Map<Int, Int> {
+        return mapOf(
+            19 to inlineCobbleStone,
+            20 to inlineCopperIngot,
+            21 to inlineIronIngot,
+            22 to inlineGoldIngot,
+            23 to inlineDiamond,
+            24 to inlineNetheriteIngot,
+            25 to inlineEmerald
         )
     }
 
