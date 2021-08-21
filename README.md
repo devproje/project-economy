@@ -51,6 +51,6 @@ repositories {
 }
 
 dependencies {
-  compileOnly("net.projecttl:PBalance-api:VERSION")
+  implementation("net.projecttl:PBalance-api:VERSION")
 }
 ```
