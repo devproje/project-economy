@@ -27,12 +27,18 @@ class PBalance : JavaPlugin() {
         }
 
         server.pluginManager.apply {
-            registerEvents(RegisterListener(), this@PBalance)
+            registerEvents(RegisterListener(this@PBalance), this@PBalance)
         }
     }
 
     override fun onDisable() {
         InitSQLDriver(this).closeConnection()
         saveConfig()
+    }
+
+    fun reconnect() {
+        if (InitSQLDriver.sqlConnection.isClosed) {
+            InitSQLDriver(this).openConnection()
+        }
     }
 }

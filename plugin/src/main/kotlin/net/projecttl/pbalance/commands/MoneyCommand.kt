@@ -18,6 +18,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
         if (InitSQLDriver.commandEnabled == true) {
             if (command.name == "pbalance") {
                 if (args.isEmpty()) {
+                    plugin.reconnect()
                     val moneySystem = Economy(sender as Player)
                     sender.sendMessage("Your account balance: ${ChatColor.GREEN}${moneySystem.money}${moneyUnit()}")
 
@@ -26,12 +27,14 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
 
                 return when (args[0]) {
                     "rank" -> {
+                        plugin.reconnect()
                         val moneySystem = Economy(sender as Player)
                         moneySystem.getRanking()
                         true
                     }
 
                     "send" -> {
+                        plugin.reconnect()
                         val target = args[1]
                         val targetPlayer = Bukkit.getPlayer(target)
                         val amount = Integer.parseInt(args[2])
@@ -55,6 +58,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                     }
 
                     "balance" -> {
+                        plugin.reconnect()
                         val moneySystem = Economy(sender as Player)
                         sender.sendMessage("Your account balance: ${ChatColor.GREEN}${moneySystem.money}${moneyUnit()}")
 
@@ -62,6 +66,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                     }
 
                     "account" -> {
+                        plugin.reconnect()
                         val moneySystem = Economy(sender as Player)
 
                         sender.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${sender.name}'s account${ChatColor.GOLD}]==========")
@@ -71,7 +76,56 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                         true
                     }
 
+                    "add" -> {
+                        plugin.reconnect()
+                        if (sender.isOp) {
+                            val target = args[1]
+                            val amount = Integer.parseInt(args[2])
+
+                            if (amount >= 0) {
+                                val targetPlayer = Bukkit.getPlayer(target)
+                                val moneySystem = Economy(targetPlayer!!)
+
+                                if (!targetPlayer.isOnline) {
+                                    sender.sendMessage("<PEconomy> ${ChatColor.GOLD}${targetPlayer.name} is offline!")
+                                } else {
+                                    moneySystem.addMoney(amount)
+                                    sender.sendMessage("<PEconomy> ${ChatColor.GREEN}Now ${targetPlayer.name}'s account balance is ${amount}${moneyUnit()}")
+                                }
+                            } else {
+                                sender.sendMessage("<PEconomy> ${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
+                            }
+                        }
+
+                        true
+                    }
+
+                    "remove" -> {
+                        plugin.reconnect()
+                        if (sender.isOp) {
+                            val target = args[1]
+                            val amount = Integer.parseInt(args[2])
+
+                            if (amount >= 0) {
+                                val targetPlayer = Bukkit.getPlayer(target)
+                                val moneySystem = Economy(targetPlayer!!)
+
+                                if (!targetPlayer.isOnline) {
+                                    sender.sendMessage("<PEconomy> ${ChatColor.GOLD}${targetPlayer.name} is offline!")
+                                } else {
+                                    moneySystem.removeMoney(amount)
+                                    sender.sendMessage("<PEconomy> ${ChatColor.GREEN}Now ${targetPlayer.name}'s account balance is ${amount}${moneyUnit()}")
+                                }
+                            } else {
+                                sender.sendMessage("<PEconomy> ${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
+                            }
+                        }
+
+                        true
+                    }
+
                     "set" -> {
+                        plugin.reconnect()
                         if (sender.isOp) {
                             val target = args[1]
                             val amount = Integer.parseInt(args[2])
@@ -98,6 +152,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                     }
 
                     "query" -> {
+                        plugin.reconnect()
                         if (sender.isOp) {
                             val moneySystem = Economy(sender as Player)
                             moneySystem.queryList()
@@ -109,6 +164,7 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                     }
 
                     "moneyunit" -> {
+                        plugin.reconnect()
                         val unit = args[1]
                         if (sender.isOp) {
                             if (unit == "") {
@@ -147,6 +203,8 @@ class MoneyCommand(private val plugin: PBalance): CommandExecutor, TabCompleter 
                         commandList.add("account")
 
                         if (sender.isOp) {
+                            commandList.add("add")
+                            commandList.add("remove")
                             commandList.add("set")
                             commandList.add("query")
                             commandList.add("moneyunit")

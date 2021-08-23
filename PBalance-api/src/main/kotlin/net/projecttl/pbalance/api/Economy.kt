@@ -23,7 +23,12 @@ class Economy(private val player: Player) {
     }
 
     fun removeMoney(amount: Int) {
-        money -= amount
+        if (amount > money) {
+            player.sendMessage("<PBalance> ${ChatColor.RED}Not enough balance in your account!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        } else {
+            money -= amount
+        }
     }
 
     fun buy(item: ItemStack, amount: Int) {
@@ -38,12 +43,41 @@ class Economy(private val player: Player) {
         }
     }
 
+    fun buyAll(item: ItemStack, oneAmount: Int) {
+        val allPrice = oneAmount * 64
+        if (allPrice > money) {
+            player.sendMessage("<PBalance> ${ChatColor.RED}Not enough balance in your account!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        } else {
+            removeMoney(allPrice)
+            item.amount = 64
+            player.inventory.addItem(item)
+            player.sendMessage("<PBalance> ${ChatColor.GREEN}You're successful bought ${item.amount} ${item.itemMeta?.displayName}!\n" +
+                    "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        }
+    }
+
     fun sell(item: ItemStack, amount: Int) {
         if (player.inventory.containsAtLeast(item, item.amount)) {
             player.inventory.removeItem(item)
             addMoney(amount)
             player.sendMessage("<PBalance> ${ChatColor.GREEN}You're successful sell ${item.amount} ${item.itemMeta?.displayName}!\n" +
                     "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
+        } else {
+            player.sendMessage("<PBalance> ${ChatColor.RED}Not enough item!")
+        }
+    }
+
+    fun sellAll(item: ItemStack, oneAmount: Int) {
+        val allPrice = oneAmount * 64
+        if (player.inventory.containsAtLeast(item, 64)) {
+            item.amount = 64
+            player.inventory.removeItem(item)
+            addMoney(allPrice)
+            player.sendMessage(
+                "<PBalance> ${ChatColor.GREEN}You're successful sell ${item.amount} ${item.itemMeta?.displayName}!\n" +
+                        "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}"
+            )
         } else {
             player.sendMessage("<PBalance> ${ChatColor.RED}Not enough item!")
         }

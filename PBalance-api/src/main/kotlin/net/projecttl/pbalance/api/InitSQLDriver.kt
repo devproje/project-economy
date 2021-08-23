@@ -43,7 +43,7 @@ class InitSQLDriver(private val plugin: Plugin) {
 
     fun loadSQLModule() {
         val logger   = plugin.logger
-        val url      = plugin.config.getString("SQL_IP")
+        val url      = plugin.config.getString("SQL_URL")
         val username = plugin.config.getString("SQL_USERNAME")
         val password = plugin.config.getString("SQL_PASSWORD")
         val port     = plugin.config.getInt("SQL_PORT")
@@ -62,7 +62,6 @@ class InitSQLDriver(private val plugin: Plugin) {
             exception.printStackTrace()
         }
 
-
         val statement: Statement = sqlConnection.createStatement()
         statement.executeUpdate("create database if not exists $database default character set utf8;")
         statement.executeUpdate("use ${database};")
@@ -73,6 +72,28 @@ class InitSQLDriver(private val plugin: Plugin) {
                 "primary key (uuid)," +
                 "unique index (username)" +
                 ");")
+    }
+
+    fun openConnection() {
+        val logger   = plugin.logger
+        val url      = plugin.config.getString("SQL_URL")
+        val username = plugin.config.getString("SQL_USERNAME")
+        val password = plugin.config.getString("SQL_PASSWORD")
+        val port     = plugin.config.getInt("SQL_PORT")
+
+        logger.info("Loading driver...")
+
+        Class.forName("com.mysql.cj.jdbc.Driver")
+        plugin.logger.info("Connecting to SQL...")
+
+        try {
+            sqlConnection = DriverManager.getConnection("jdbc:mysql://${url}:${port}/", username, password)
+            logger.info("Connected to ${url}:${port}")
+        } catch (exception: SQLException) {
+            exception.printStackTrace()
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
     }
 
     fun closeConnection() {
