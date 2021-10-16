@@ -1,5 +1,5 @@
 name: ${rootProject.name}
-version: ${rootProject.version}
+version: ${project.version}
 api-version: 1.17
 main: net.projecttl.pbalance.PBalance
 

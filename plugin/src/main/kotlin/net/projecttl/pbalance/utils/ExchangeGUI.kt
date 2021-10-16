@@ -20,15 +20,16 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
         player.gui(plugin, InventoryType.CHEST_27, Component.text("${ChatColor.GREEN}EXCHANGER")) {
             val compass = ItemStack(Material.COMPASS).let {
                 val itemMeta = it.itemMeta
-                itemMeta?.setDisplayName("CHECKING MONEY")
-                itemMeta?.lore = listOf("If you wanna see your account, click me!")
+                itemMeta?.displayName(Component.text("CHECKING MONEY"))
+                itemMeta?.lore(listOf(Component.text("If you wanna see your account, click me!")))
                 it.itemMeta = itemMeta
 
                 it
             }
+
             val voidItem = ItemStack(Material.BLACK_STAINED_GLASS_PANE).let {
                 val itemMeta = it.itemMeta
-                itemMeta?.setDisplayName("${ChatColor.GRAY}VOID ITEM")
+                itemMeta?.displayName(Component.text("${ChatColor.GRAY}VOID ITEM"))
 
                 it.itemMeta = itemMeta
                 it
@@ -36,8 +37,8 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
 
             val exitItem = ItemStack(Material.BARRIER).let {
                 val itemMeta = it.itemMeta
-                itemMeta?.setDisplayName("${ChatColor.RED}Exit")
-                itemMeta?.lore = listOf("${ChatColor.WHITE}You can close this gui")
+                itemMeta?.displayName(Component.text("${ChatColor.RED}Exit"))
+                itemMeta?.lore(listOf(Component.text("${ChatColor.WHITE}You can close this gui")))
 
                 it.itemMeta = itemMeta
                 it
@@ -116,10 +117,10 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
     private fun money(): Map<Int, ItemStack> {
         val emerald = ItemStack(Material.EMERALD).let {
             val itemMeta = it.itemMeta
-            itemMeta?.lore = listOf(
-                "${ChatColor.GREEN}It is minecraft default money!",
-                "${ChatColor.GOLD}Value: ${ChatColor.WHITE}${amount()[10]}${moneyUnit()}"
-            )
+            itemMeta?.lore(listOf(
+                Component.text("${ChatColor.GREEN}It is minecraft default money!"),
+                Component.text("${ChatColor.GOLD}Value: ${ChatColor.WHITE}${amount()[10]}${moneyUnit()}")
+            ))
 
             it.itemMeta = itemMeta
             it
@@ -146,16 +147,17 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
     private fun createMoneyDesc(amount: Int): ItemStack {
         return ItemStack(Material.PAPER).let {
             val itemMeta = it.itemMeta
-            itemMeta?.setDisplayName("${ChatColor.YELLOW}$amount${moneyUnit()}")
-            itemMeta?.lore = listOf(
-                "${ChatColor.GREEN}It's looks like a cash!",
-                "${ChatColor.GOLD}Value: ${ChatColor.WHITE}$amount${moneyUnit()}",
-                "\n",
-                "${ChatColor.GREEN}If you wanna buy or sell item, ",
-                "${ChatColor.GREEN}please click Left Mouse or Right Mouse.",
-                "${ChatColor.GOLD}If you wanna buy item in 1 set, please click 'Shift + Right'.",
-                "${ChatColor.GOLD}If you wanna sell item in 1 set, please click 'Shift + Left'."
-            )
+            itemMeta?.displayName(Component.text("${ChatColor.YELLOW}$amount${moneyUnit()}"))
+            itemMeta?.lore(listOf(
+                Component.text("${ChatColor.GREEN}It's looks like a cash!"),
+                Component.text("${ChatColor.GOLD}Value: ${ChatColor.WHITE}$amount${moneyUnit()}"),
+                Component.text("\n"),
+                Component.text("${ChatColor.GREEN}If you wanna buy or sell item, "),
+                Component.text("${ChatColor.GREEN}please click Left Mouse or Right Mouse."),
+                Component.text("${ChatColor.GOLD}If you wanna buy item in 1 set, please click 'Shift + Right'."),
+                Component.text("${ChatColor.GOLD}If you wanna sell item in 1 set, please click 'Shift + Left'.")
+            ))
+
             itemMeta?.addEnchant(Enchantment.MENDING, 1, true)
             it.itemMeta = itemMeta
             it
@@ -165,15 +167,15 @@ class ExchangeGUI(private val player: Player, private val plugin: Plugin) {
     private fun moneyDesc(): Map<Int, ItemStack> {
         val emerald = ItemStack(Material.EMERALD).let {
             val itemMeta = it.itemMeta
-            itemMeta?.lore = listOf(
-                "${ChatColor.GREEN}It is minecraft default money!",
-                "${ChatColor.GOLD}Value: ${ChatColor.WHITE}${amount()[10]}${moneyUnit()}",
-                "\n",
-                "${ChatColor.GREEN}If you wanna buy or sell item,",
-                "${ChatColor.GREEN}please click Left Mouse or Right Mouse.",
-                "${ChatColor.GOLD}If you wanna buy item in 1 set, please click 'Shift + Right'.",
-                "${ChatColor.GOLD}If you wanna sell item in 1 set, please click 'Shift + Left'."
-            )
+            itemMeta?.lore(listOf(
+                Component.text("${ChatColor.GREEN}It is minecraft default money!"),
+                Component.text("${ChatColor.GOLD}Value: ${ChatColor.WHITE}${amount()[10]}${moneyUnit()}"),
+                Component.text("\n"),
+                Component.text("${ChatColor.GREEN}If you wanna buy or sell item,"),
+                Component.text("${ChatColor.GREEN}please click Left Mouse or Right Mouse."),
+                Component.text("${ChatColor.GOLD}If you wanna buy item in 1 set, please click 'Shift + Right'."),
+                Component.text("${ChatColor.GOLD}If you wanna sell item in 1 set, please click 'Shift + Left'.")
+            ))
 
             it.itemMeta = itemMeta
             it

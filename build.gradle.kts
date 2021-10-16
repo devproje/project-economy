@@ -1,35 +1,43 @@
 plugins {
     kotlin("jvm") version "1.5.21"
     id("org.jetbrains.dokka") version "1.5.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 group = "net.projecttl"
 version = "1.2.0"
 
 allprojects {
+    apply(plugin = "com.github.johnrengelman.shadow")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.dokka")
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(16))
+        }
+    }
+
     repositories {
         mavenCentral()
     }
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "org.jetbrains.dokka")
-
     repositories {
         mavenCentral()
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://jitpack.io")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots/") {
-            name = "sonatype-oss-snapshots"
-        }
     }
 
     dependencies {
         implementation(kotlin("stdlib"))
-        implementation("net.kyori:adventure-api:4.7.0")
+        implementation("net.kyori:adventure-api:4.9.2")
         implementation("net.projecttl:InventoryGUI-api:4.1.1")
-        compileOnly("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
+        implementation("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
+
+        compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
         compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
     }
 }
