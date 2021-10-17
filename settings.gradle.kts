@@ -1,4 +1,4 @@
-rootProject.name = "PBalance"
-include("PBalance-api")
+rootProject.name = "project-economy"
+include("${rootProject.name}-api")
 include("plugin")
 include("bungee")

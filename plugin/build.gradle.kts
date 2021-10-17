@@ -1,11 +1,15 @@
 group = rootProject.group
-version = "1.2.1"
+version = rootProject.version
 
 dependencies {
     implementation(project(":${rootProject.name}-api"))
 }
 
 tasks {
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+
     processResources {
         filesMatching("*.yml") {
             expand(project.properties)

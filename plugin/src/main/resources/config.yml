@@ -3,13 +3,7 @@ SQL_USERNAME: ""
 SQL_PASSWORD: ""
 SQL_PORT: 3306
 
-DATABASE: "PBalance"
-TABLE: "account"
-USERNAME: "username"
-UUID: "uuid"
-BALANCE: "amount"
+DATABASE: "project-work"
 MONEY_UNIT: "₩"
-COMMAND_ENABLED: true
-EXCHANGE_GUI: true
 
 emerald_cost: 1000

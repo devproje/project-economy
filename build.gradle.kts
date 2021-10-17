@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.5.21"
+    java
+    kotlin("jvm") version "1.5.31"
     id("org.jetbrains.dokka") version "1.5.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
@@ -11,6 +12,7 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "org.jetbrains.dokka")
+    apply(plugin = "java")
 
     java {
         toolchain {

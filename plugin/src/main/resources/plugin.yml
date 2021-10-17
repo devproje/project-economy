@@ -1,16 +1,12 @@
 name: ${rootProject.name}
 version: ${project.version}
 api-version: 1.17
-main: net.projecttl.pbalance.PBalance
+main: net.projecttl.plugin.ProjectEconomy
 
 commands:
-  pbalance:
+  money:
     description: This is money command
-    usage: /pbalance <option> <target_player> <amount>
+    usage: /money <option> <target_player> <amount>
     aliases:
       - money
-  exchanger:
-    description: This is exchanger command
-    usage: /exchanger
-    aliases:
-      - ex
+      - economy
