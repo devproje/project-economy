@@ -16,20 +16,22 @@ class InitSQL(private val plugin: JavaPlugin) {
     private val moneyUnit    = plugin.config.getString("MONEY_UNIT")
 
     fun connect() {
-        logger.info("Loading driver...")
+        if (sqlConnection.isClosed) {
+            logger.info("Loading driver...")
 
-        Class.forName("com.mysql.cj.jdbc.Driver")
-        plugin.logger.info("Connecting to SQL...")
+            Class.forName("com.mysql.cj.jdbc.Driver")
+            plugin.logger.info("Connecting to SQL...")
 
-        try {
-            sqlConnection = DriverManager.getConnection("jdbc:mysql://${url}:${port}/$databaseName", username, password)
-            logger.info("Connected to ${url}:${port}/$databaseName")
-        } catch (exception: SQLException) {
-            exception.printStackTrace()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
+            try {
+                sqlConnection =
+                    DriverManager.getConnection("jdbc:mysql://${url}:${port}/$databaseName", username, password)
+                logger.info("Connected to ${url}:${port}/$databaseName")
+            } catch (exception: SQLException) {
+                exception.printStackTrace()
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
         }
-
     }
 
     fun disconnect() {

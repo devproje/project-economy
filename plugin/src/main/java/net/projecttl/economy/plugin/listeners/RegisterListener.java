@@ -25,7 +25,5 @@ public record RegisterListener(ProjectEconomy instance) implements Listener {
             "Good luck!\n" +
             ChatColor.GOLD + "================================"
         );
-
-        instance.disconnect();
     }
 }
