@@ -20,9 +20,9 @@ public record RegisterListener(ProjectEconomy instance) implements Listener {
 
         player.sendMessage(
             ChatColor.GOLD + "================================" +
-            ChatColor.WHITE + "Hello, " + player.getName() + "!" +
-            "Your balance is" + economy.getMoney() + EconomyKt.moneyUnit() +
-            "Good luck!" +
+            ChatColor.WHITE + "Hello, " + player.getName() + "!\n" +
+            "Your balance is" + economy.getMoney() + EconomyKt.moneyUnit() + "\n" +
+            "Good luck!\n" +
             ChatColor.GOLD + "================================"
         );
 
