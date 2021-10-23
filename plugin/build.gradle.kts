@@ -1,13 +1,17 @@
 group = rootProject.group
 version = rootProject.version
 
-dependencies {
-    implementation(project(":${rootProject.name}-api"))
-}
+// dependencies {
+//     implementation(project(":${rootProject.name}-api"))
+// }
 
 tasks {
     compileJava {
         options.encoding = "UTF-8"
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_16.toString()
     }
 
     processResources {

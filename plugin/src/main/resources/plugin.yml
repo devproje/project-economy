@@ -1,7 +1,7 @@
 name: ${rootProject.name}
 version: ${project.version}
 api-version: 1.17
-main: net.projecttl.plugin.ProjectEconomy
+main: net.projecttl.economy.plugin.ProjectEconomy
 
 commands:
   money:
@@ -10,3 +10,8 @@ commands:
     aliases:
       - money
       - economy
+
+  exchanger:
+    description: This is gui exchanger
+    usage: /exchanger
+    aliases: [ex]
