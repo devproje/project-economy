@@ -1,12 +1,12 @@
 package net.projecttl.economy.plugin.utils
 
-import net.projecttl.economy.plugin.utils.InitSQL
+import net.projecttl.economy.plugin.instance
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-private val moneyUnit: String = InitSQL.moneyUnits.toString()
+private val moneyUnit = InitSQL.moneyUnits.toString()
 
 fun moneyUnit(): String {
     return if (moneyUnit.length > 3) {
@@ -14,6 +14,10 @@ fun moneyUnit(): String {
     } else {
         moneyUnit
     }
+}
+
+fun setMoneyUnit(unit: String) {
+    instance.config.set("MONEY_UNIT", unit)
 }
 
 class Economy(private val player: Player) {
@@ -150,21 +154,24 @@ class Economy(private val player: Player) {
         )
         var i = 1
         while (resultSets.next()) {
+            val username = resultSets.getString("username")
+            val amount   = resultSets.getInt("amount")
+
             when (i) {
                 1 -> {
-                    player.sendMessage("${i}st: ${resultSets.getString("username")} => ${resultSets.getInt("amount")}${moneyUnit()}")
+                    player.sendMessage("${ChatColor.GOLD}$i: ${ChatColor.WHITE}$username => $amount${moneyUnit()}")
                 }
 
                 2 -> {
-                    player.sendMessage("${i}nd: ${resultSets.getString("username")} => ${resultSets.getInt("amount")}${moneyUnit()}")
+                    player.sendMessage("${ChatColor.GRAY}${i}: ${ChatColor.WHITE}$username => $amount${moneyUnit()}")
                 }
 
                 3 -> {
-                    player.sendMessage("${i}rd: ${resultSets.getString("username")} => ${resultSets.getInt("amount")}${moneyUnit()}")
+                    player.sendMessage("${ChatColor.YELLOW}${i}: ${ChatColor.WHITE}$username => $amount${moneyUnit()}")
                 }
 
                 else -> {
-                    player.sendMessage("${i}th: ${resultSets.getString("username")} => ${resultSets.getInt("amount")}${moneyUnit()}")
+                    player.sendMessage("${ChatColor.WHITE}${i}: ${ChatColor.WHITE}$username => $amount${moneyUnit()}")
                 }
             }
 
@@ -177,9 +184,11 @@ class Economy(private val player: Player) {
     }
 
     fun showAccount() {
-        player.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${player.name}'s account${ChatColor.GOLD}]==========")
-        player.sendMessage("${ChatColor.YELLOW}UUID${ChatColor.RESET}: ${player.uniqueId}")
-        player.sendMessage("${ChatColor.YELLOW}Balance${ChatColor.RESET}: ${queryMoney()}${moneyUnit()}")
+        for (i in queryAccount()) {
+            player.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${i.username}'s account${ChatColor.GOLD}]==========")
+            player.sendMessage("${ChatColor.YELLOW}UUID${ChatColor.RESET}: ${i.uuid}")
+            player.sendMessage("${ChatColor.YELLOW}Balance${ChatColor.RESET}: ${i.amount}${moneyUnit()}")
+        }
     }
 
     fun queryList() {
@@ -204,5 +213,15 @@ class Economy(private val player: Player) {
         }
 
         return result!!
+    }
+
+    fun queryAccount(): MutableList<Account> {
+        val resultSets = statement.executeQuery("SELECT * FROM ${InitSQL.dbName}.economy;")
+        val list = mutableListOf<Account>()
+        while (resultSets.next()) {
+            list += Account(UUID.fromString(resultSets.getString("uuid")), resultSets.getString("username"), resultSets.getInt("amount"))
+        }
+
+        return list
     }
 }

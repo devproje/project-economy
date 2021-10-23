@@ -1,11 +1,10 @@
 package net.projecttl.economy
 
-import net.projecttl.economy.plugin.utils.Economy
-import net.projecttl.economy.plugin.utils.InitSQL
-import org.bukkit.ChatColor
+import net.projecttl.economy.plugin.utils.*
+import net.projecttl.economy.plugin.utils.moneyUnit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import org.bukkit.plugin.java.JavaPlugin
 
 private val moneyUnit: String = InitSQL.moneyUnits.toString()
 
@@ -17,21 +16,34 @@ fun moneyUnit(): String {
     }
 }
 
-fun economyOf(player: Player): EconomyAPI {
-    return EconomyAPI(player)
+fun economyOf(player: Player, plugin: JavaPlugin): EconomyAPI {
+    return EconomyAPI(player, plugin)
 }
 
-class EconomyAPI(player: Player) {
+class EconomyAPI(player: Player, plugin: JavaPlugin) {
 
     private val economy = Economy(player)
 
+    init {
+        loadPlugin(plugin)
+    }
+
     var money: Int
-    get() {
-        return economy.money
-    }
-    set(amount) {
-        economy.money = amount
-    }
+        get() {
+            return economy.money
+        }
+        set(amount) {
+            economy.money = amount
+        }
+
+    var moneyUnit: String
+        get() {
+            return moneyUnit()
+        }
+
+        set(new_unit) {
+            setMoneyUnit(new_unit)
+        }
 
     fun addMoney(amount: Int) {
         economy.addMoney(amount)
