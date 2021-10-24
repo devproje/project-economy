@@ -6,4 +6,11 @@ SQL_PORT: 3306
 SQL_DATABASE: "project_work"
 MONEY_UNIT: "₩"
 
+BOT_ACTIVATE: false
+BOT_TOKEN: ""
+EMBED_COLOR: 0xEE58FF
+
+ACTIVITY: false
+ACTIVITY_MESSAGE: project-economy plugin
+
 emerald_cost: 1000

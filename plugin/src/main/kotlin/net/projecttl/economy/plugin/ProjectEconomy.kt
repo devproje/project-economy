@@ -3,6 +3,7 @@ package net.projecttl.economy.plugin
 import net.projecttl.economy.plugin.commands.EconomyCommand
 import net.projecttl.economy.plugin.commands.ExchangeCommand
 import net.projecttl.economy.plugin.listeners.RegisterListener
+import net.projecttl.economy.plugin.utils.DiscordModule
 import net.projecttl.economy.plugin.utils.InitSQL
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
@@ -22,7 +23,10 @@ class ProjectEconomy : JavaPlugin() {
         }
 
         connect()
-        logger.info("${ChatColor.GREEN}Project Economy plugin has enabled!")
+
+        logger.info("Load JDA Module...")
+        DiscordModule()
+
         getCommand("money")?.apply {
             setExecutor(EconomyCommand)
             tabCompleter = EconomyCommand
@@ -30,6 +34,8 @@ class ProjectEconomy : JavaPlugin() {
 
         getCommand("exchanger")?.setExecutor(ExchangeCommand)
         server.pluginManager.registerEvents(RegisterListener(), this)
+
+        logger.info("${ChatColor.GREEN}Project Economy plugin has enabled!")
     }
 
     override fun onDisable() {

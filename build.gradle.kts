@@ -28,11 +28,13 @@ subprojects {
         mavenCentral()
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
         maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://m2.dv8tion.net/releases")
         maven("https://jitpack.io")
     }
 
     dependencies {
         implementation(kotlin("stdlib"))
+        implementation("net.dv8tion:JDA:4.3.0_277")
         implementation("net.kyori:adventure-api:4.9.2")
         implementation("net.projecttl:InventoryGUI-api:4.1.8")
         implementation("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")

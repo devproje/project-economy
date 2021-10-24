@@ -29,7 +29,7 @@ class Economy(private val player: Player) {
 
         set(amount) {
             statement.executeUpdate(
-                "update ${InitSQL.dbName}.economy set amount = $amount " +
+                "update ${InitSQL.dbName}.account set amount = $amount " +
                         "where uuid = '${player.uniqueId}' or username = '${player.name}';")
         }
 
@@ -150,7 +150,7 @@ class Economy(private val player: Player) {
 
     fun getRanking() {
         val resultSets = statement.executeQuery(
-            "SELECT * FROM ${InitSQL.dbName}.economy ORDER BY length(amount) desc, amount desc;"
+            "SELECT * FROM ${InitSQL.dbName}.account ORDER BY length(amount) desc, amount desc;"
         )
         var i = 1
         while (resultSets.next()) {
@@ -180,31 +180,43 @@ class Economy(private val player: Player) {
     }
 
     fun registerAccount() {
-        statement.executeUpdate("insert ignore into ${InitSQL.dbName}.economy values('${player.uniqueId}', '${player.name}', 0);")
+        statement.executeUpdate("insert ignore into ${InitSQL.dbName}.account values('${player.uniqueId}', '${player.name}', 0, null);")
     }
 
     fun showAccount() {
-        for (i in queryAccount()) {
-            player.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${i.username}'s account${ChatColor.GOLD}]==========")
-            player.sendMessage("${ChatColor.YELLOW}UUID${ChatColor.RESET}: ${i.uuid}")
-            player.sendMessage("${ChatColor.YELLOW}Balance${ChatColor.RESET}: ${i.amount}${moneyUnit()}")
+        for (i in queryAccount().values) {
+            if (i.username == player.name) {
+                player.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${i.username}'s account${ChatColor.GOLD}]==========")
+                player.sendMessage("${ChatColor.YELLOW}UUID${ChatColor.RESET}: ${i.uuid}")
+                player.sendMessage("${ChatColor.YELLOW}Balance${ChatColor.RESET}: ${i.amount}${moneyUnit()}")
+                player.sendMessage("${ChatColor.YELLOW}Discord ID${ChatColor.RESET}: ${i.discord_id}")
+            }
         }
     }
 
+    fun mergeDiscordID(discordId: String) {
+        statement.executeUpdate(
+            "update ${InitSQL.dbName}.account set discord_id = $discordId where" +
+                    "uuid = '${player.uniqueId}' or username = '${player.name}';"
+        )
+    }
+
     fun queryList() {
-        val resultSets = statement.executeQuery("select * from ${InitSQL.dbName}.economy;")
-        while (resultSets.next()) {
-            player.sendMessage("${ChatColor.GOLD}===============================================\n" +
-                    "${ChatColor.GREEN}UUID: ${ChatColor.RESET}${resultSets.getString("uuid")}\n" +
-                    "${ChatColor.GREEN}NAME: ${ChatColor.RESET}${resultSets.getString("username")}\n" +
-                    "${ChatColor.GREEN}BALANCE: ${ChatColor.RESET}${resultSets.getInt("amount")}${moneyUnit()}\n" +
-                    "${ChatColor.GOLD}===============================================")
+        for (i in queryAccount().values) {
+            player.sendMessage(
+                "${ChatColor.GOLD}===============================================\n" +
+                        "${ChatColor.GREEN}UUID: ${ChatColor.RESET}${i.uuid}\n" +
+                        "${ChatColor.GREEN}NAME: ${ChatColor.RESET}${i.username}\n" +
+                        "${ChatColor.GREEN}BALANCE: ${ChatColor.RESET}${i.amount}${moneyUnit()}\n" +
+                        "${ChatColor.GREEN}DISCORD_ID: ${ChatColor.RESET}${i.discord_id}" +
+                        "${ChatColor.GOLD}==============================================="
+            )
         }
     }
 
     private fun queryMoney(): Int {
         val resultSet = statement.executeQuery(
-            "select * from ${InitSQL.dbName}.economy where username = '${player.name}' and uuid = '${player.uniqueId}'"
+            "select * from ${InitSQL.dbName}.account where username = '${player.name}' and uuid = '${player.uniqueId}'"
         )
         var result: Int? = null
 
@@ -215,11 +227,16 @@ class Economy(private val player: Player) {
         return result!!
     }
 
-    fun queryAccount(): MutableList<Account> {
-        val resultSets = statement.executeQuery("SELECT * FROM ${InitSQL.dbName}.economy;")
-        val list = mutableListOf<Account>()
+    fun queryAccount(): MutableMap<UUID, Account> {
+        val resultSets = statement.executeQuery("SELECT * FROM ${InitSQL.dbName}.account;")
+        val list = mutableMapOf<UUID, Account>()
         while (resultSets.next()) {
-            list += Account(UUID.fromString(resultSets.getString("uuid")), resultSets.getString("username"), resultSets.getInt("amount"))
+            list += UUID.fromString(resultSets.getString("uuid")) to Account(
+                UUID.fromString(resultSets.getString("uuid")),
+                resultSets.getString("username"),
+                resultSets.getInt("amount"),
+                resultSets.getString("discord_id")
+            )
         }
 
         return list
