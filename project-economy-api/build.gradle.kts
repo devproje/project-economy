@@ -6,6 +6,10 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
+dependencies {
+    compileOnly(project(":plugin"))
+}
+
 tasks {
     javadoc {
         options.encoding = "UTF-8"

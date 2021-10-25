@@ -1,11 +1,11 @@
-# PBalance
+# project-economy
 This is minecraft plugin MySQL money system.
 
 ## Command List
-This is plugin command /pbalance or /money
+This is plugin command /economy or /money
 - Show account balance
 ```mclang
-/money balance
+/money account
 ```
 
 - Send money
@@ -29,7 +29,7 @@ This is plugin command /pbalance or /money
 
 <dependency>
   <groupId>net.projecttl</groupId>
-  <artifactId>PBalance-api</artifactId>
+  <artifactId>project-economy-api</artifactId>
   <version>Tag</version>
 </dependency>
 ```
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'net.projecttl:PBalance-api:VERSION'
+  implementation 'net.projecttl:project-economy-api:VERSION'
 }
 ```
 
@@ -51,6 +51,6 @@ repositories {
 }
 
 dependencies {
-  implementation("net.projecttl:PBalance-api:VERSION")
+  implementation("net.projecttl:project-economy-api:VERSION")
 }
 ```
