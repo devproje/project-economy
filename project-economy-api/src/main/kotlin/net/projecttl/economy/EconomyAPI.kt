@@ -49,8 +49,13 @@ class EconomyAPI(player: Player, plugin: JavaPlugin) {
         economy.addMoney(amount)
     }
 
+    fun subtractMoney(amount: Int) {
+        economy.subtractMoney(amount)
+    }
+
+    @Deprecated("Moved to subtractMoney()")
     fun removeMoney(amount: Int) {
-        economy.removeMoney(amount)
+        economy.subtractMoney(amount)
     }
 
     fun buy(item: ItemStack, amount: Int) {

@@ -1,6 +1,7 @@
 package net.projecttl.economy.plugin.utils
 
 import net.projecttl.economy.plugin.instance
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -29,14 +30,25 @@ class Economy(private val player: Player) {
 
         set(amount) {
             statement.executeUpdate(
-                "update ${InitSQL.dbName}.account set amount = $amount " +
-                        "where uuid = '${player.uniqueId}' or username = '${player.name}';")
+                "update ${InitSQL.dbName}.account set amount = $amount where uuid = '${player.uniqueId}' or username = '${player.name}';")
         }
 
     fun addMoney(amount: Int) {
         money += amount
     }
 
+    fun subtractMoney(amount: Int) {
+        if (amount > money) {
+            player.sendMessage(
+                "${ChatColor.RED}Not enough balance in your account!\n" +
+                        "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}"
+            )
+        } else {
+            money -= amount
+        }
+    }
+
+    @Deprecated("changed for subtractMoney()")
     fun removeMoney(amount: Int) {
         if (amount > money) {
             player.sendMessage(
@@ -108,7 +120,7 @@ class Economy(private val player: Player) {
                     "${ChatColor.RED}Not enough balance in your account!\n" +
                             "${ChatColor.GREEN}Current balance${ChatColor.RESET}: ${money}${moneyUnit()}")
             } else {
-                removeMoney(amount)
+                subtractMoney(amount)
                 player.inventory.addItem(item)
 
                 checkNullItemName(item, true)
@@ -180,25 +192,19 @@ class Economy(private val player: Player) {
     }
 
     fun registerAccount() {
-        statement.executeUpdate("insert ignore into ${InitSQL.dbName}.account values('${player.uniqueId}', '${player.name}', 0, null);")
+        statement.executeUpdate("insert ignore into ${InitSQL.dbName}.account values('${player.uniqueId}', 0, null);")
     }
 
     fun showAccount() {
         for (i in queryAccount().values) {
-            if (i.username == player.name) {
-                player.sendMessage("${ChatColor.GOLD}==========[${ChatColor.RESET}${i.username}'s account${ChatColor.GOLD}]==========")
+            if (i.uuid == player.uniqueId) {
+                player.sendMessage(
+                    "${ChatColor.GOLD}==========[${ChatColor.RESET}${Bukkit.getPlayer(i.uuid)}'s account${ChatColor.GOLD}]=========="
+                )
                 player.sendMessage("${ChatColor.YELLOW}UUID${ChatColor.RESET}: ${i.uuid}")
                 player.sendMessage("${ChatColor.YELLOW}Balance${ChatColor.RESET}: ${i.amount}${moneyUnit()}")
-                player.sendMessage("${ChatColor.YELLOW}Discord ID${ChatColor.RESET}: ${i.discord_id}")
             }
         }
-    }
-
-    fun mergeDiscordID(discordId: String) {
-        statement.executeUpdate(
-            "update ${InitSQL.dbName}.account set discord_id = $discordId where" +
-                    "uuid = '${player.uniqueId}' or username = '${player.name}';"
-        )
     }
 
     fun queryList() {
@@ -206,9 +212,8 @@ class Economy(private val player: Player) {
             player.sendMessage(
                 "${ChatColor.GOLD}===============================================\n" +
                         "${ChatColor.GREEN}UUID: ${ChatColor.RESET}${i.uuid}\n" +
-                        "${ChatColor.GREEN}NAME: ${ChatColor.RESET}${i.username}\n" +
+                        "${ChatColor.GREEN}NAME: ${ChatColor.RESET}${Bukkit.getPlayer(i.uuid)}\n" +
                         "${ChatColor.GREEN}BALANCE: ${ChatColor.RESET}${i.amount}${moneyUnit()}\n" +
-                        "${ChatColor.GREEN}DISCORD_ID: ${ChatColor.RESET}${i.discord_id}" +
                         "${ChatColor.GOLD}==============================================="
             )
         }
@@ -233,9 +238,7 @@ class Economy(private val player: Player) {
         while (resultSets.next()) {
             list += UUID.fromString(resultSets.getString("uuid")) to Account(
                 UUID.fromString(resultSets.getString("uuid")),
-                resultSets.getString("username"),
-                resultSets.getInt("amount"),
-                resultSets.getString("discord_id")
+                resultSets.getInt("amount")
             )
         }
 

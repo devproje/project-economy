@@ -1,7 +1,6 @@
-package net.projecttl.economy.plugin.commands
+package net.projecttl.economy.plugin
 
 import net.kyori.adventure.text.Component
-import net.projecttl.economy.plugin.instance
 import net.projecttl.economy.plugin.utils.Economy
 import net.projecttl.economy.plugin.utils.moneyUnit
 import org.bukkit.Bukkit
@@ -12,7 +11,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-object EconomyCommand : CommandExecutor, TabCompleter {
+object CommandDispatcher : CommandExecutor, TabCompleter {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.name == "money") {
@@ -39,7 +38,7 @@ object EconomyCommand : CommandExecutor, TabCompleter {
                             } else if (economy.money <= 0 || amount <= 0) {
                                 sender.sendMessage("${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
                             } else {
-                                economy.removeMoney(amount)
+                                economy.subtractMoney(amount)
                                 targetAccount.addMoney(amount)
 
                                 sender.sendMessage("You have successfully sent ${amount}${moneyUnit()} to ${target.name}")
@@ -91,7 +90,7 @@ object EconomyCommand : CommandExecutor, TabCompleter {
                                 if (!target.isOnline) {
                                     sender.sendMessage("${ChatColor.GOLD}${target.name} is offline!")
                                 } else {
-                                    targetAccount.removeMoney(amount)
+                                    targetAccount.subtractMoney(amount)
                                     sender.sendMessage("${ChatColor.GREEN}Now ${target.name}'s account balance is $amount${moneyUnit()}")
                                 }
                             } else {

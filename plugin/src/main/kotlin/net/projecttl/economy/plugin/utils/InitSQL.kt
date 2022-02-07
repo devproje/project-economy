@@ -62,9 +62,7 @@ class InitSQL(private val plugin: JavaPlugin) {
         statement.executeUpdate(
             "create table if not exists account(" +
                     "`uuid` varchar(36) not null," +
-                    "`username` varchar(25) not null," +
                     "`amount` int not null," +
-                    "`discord_id` varchar(18) null," +
                     "primary key (uuid)," +
                     "unique index (username)" +
                     ");"

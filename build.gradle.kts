@@ -1,11 +1,11 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
-    id("org.jetbrains.dokka") version "1.5.0"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    kotlin("jvm") version "1.6.10"
+    id("org.jetbrains.dokka") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "net.projecttl"
-version = "1.0.0-REMAKE"
+version = "2.0.0"
 
 allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -14,7 +14,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(16))
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
 
@@ -34,11 +34,6 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib"))
-        implementation("net.dv8tion:JDA:4.3.0_277")
-        implementation("net.kyori:adventure-api:4.9.2")
-        implementation("net.projecttl:InventoryGUI-api:4.1.8")
-        implementation("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
-
         compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
         compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
     }

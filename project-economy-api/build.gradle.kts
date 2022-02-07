@@ -42,10 +42,10 @@ publishing {
                     url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
 
                     credentials.runCatching {
-                        val MAVEN_UPLOAD_USER: String = (project.properties["ossUserName"] as String?)!!
-                        val MAVEN_UPLOAD_PWD: String = (project.properties["ossPassword"] as String?)!!
-                        username = MAVEN_UPLOAD_USER
-                        password = MAVEN_UPLOAD_PWD
+                        val nexusUsername: String by project
+                        val nexusPassword: String by project
+                        username = nexusUsername
+                        password = nexusPassword
                     }
                 }
 
@@ -55,19 +55,19 @@ publishing {
                     url.set("https://github.com/ProjectTL12345/${rootProject.name}")
                     licenses {
                         license {
-                            name.set("GNU GENERAL PUBLIC LICENSE Version 3")
+                            name.set("GNU General Public License Version 3")
                             url.set("https://www.gnu.org/licenses/gpl-3.0.txt")
                         }
                     }
                     developers {
                         developer {
-                            id.set("ProjectTL12345")
-                            name.set("Project_TL")
+                            id.set("DevProject04")
+                            name.set("Dev_Project")
                             email.set("me@projecttl.net")
                         }
                     }
                     scm {
-                        connection.set("scm:git:https://github.com/ProjetTL12345/${rootProject.name}.git")
+                        connection.set("scm:git:https://github.com/DevProject04/${rootProject.name}.git")
                         developerConnection.set("scm:git:https://github.com/ProjetTL12345/${rootProject.name}.git")
                         url.set("https://github.com/ProjetTL12345/${rootProject.name}.git")
                     }
