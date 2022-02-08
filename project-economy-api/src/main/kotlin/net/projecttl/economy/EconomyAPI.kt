@@ -3,7 +3,6 @@ package net.projecttl.economy
 import net.projecttl.economy.plugin.utils.*
 import net.projecttl.economy.plugin.utils.moneyUnit
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 private val moneyUnit: String = InitSQL.moneyUnits.toString()
@@ -51,30 +50,5 @@ class EconomyAPI(player: Player, plugin: JavaPlugin) {
 
     fun subtractMoney(amount: Int) {
         economy.subtractMoney(amount)
-    }
-
-    @Deprecated("Moved to subtractMoney()")
-    fun removeMoney(amount: Int) {
-        economy.subtractMoney(amount)
-    }
-
-    fun buy(item: ItemStack, amount: Int) {
-        economy.buy(item, amount)
-    }
-
-    fun sell(item: ItemStack, amount: Int) {
-        economy.sell(item, amount)
-    }
-
-    fun buySet(item: ItemStack) {
-        economy.buySet(item)
-    }
-
-    fun sellSet(item: ItemStack) {
-        economy.sellSet(item)
-    }
-
-    fun sellAll(item: ItemStack) {
-        economy.sellAll(item)
     }
 }

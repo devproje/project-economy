@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.projecttl"
-version = "2.0.0"
+version = "2.1.0"
 
 allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -35,6 +35,6 @@ subprojects {
     dependencies {
         implementation(kotlin("stdlib"))
         compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-        compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
+        compileOnly("mysql:mysql-connector-java:8.0.26")
     }
 }

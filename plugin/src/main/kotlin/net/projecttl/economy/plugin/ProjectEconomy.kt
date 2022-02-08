@@ -19,7 +19,7 @@ class ProjectEconomy : JavaPlugin() {
             saveDefaultConfig()
         }
 
-        connect()
+        database.connect()
 
         logger.info("Load JDA Module...")
 
@@ -28,7 +28,6 @@ class ProjectEconomy : JavaPlugin() {
             tabCompleter = CommandDispatcher
         }
 
-        getCommand("exchanger")?.setExecutor(CommandDispatcher)
         server.pluginManager.registerEvents(RegisterListener(), this)
 
         logger.info("${ChatColor.GREEN}Project Economy plugin has enabled!")
@@ -37,14 +36,6 @@ class ProjectEconomy : JavaPlugin() {
     override fun onDisable() {
         logger.info("${ChatColor.RED}Project Economy plugin has disabled!")
         saveConfig()
-        disconnect()
-    }
-
-    fun connect() {
-        database.connect()
-    }
-
-    fun disconnect() {
         database.disconnect()
     }
 }
