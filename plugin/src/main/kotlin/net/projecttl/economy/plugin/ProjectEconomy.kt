@@ -4,7 +4,6 @@ import net.projecttl.economy.plugin.listeners.RegisterListener
 import net.projecttl.economy.plugin.utils.InitSQL
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 lateinit var instance: ProjectEconomy
 
@@ -16,12 +15,10 @@ class ProjectEconomy : JavaPlugin() {
         instance = this
 
         if (!dataFolder.exists()) {
-            saveDefaultConfig()
+            this.saveDefaultConfig()
         }
 
         database.connect()
-
-        logger.info("Load JDA Module...")
 
         getCommand("money")?.apply {
             setExecutor(CommandDispatcher)
@@ -29,7 +26,6 @@ class ProjectEconomy : JavaPlugin() {
         }
 
         server.pluginManager.registerEvents(RegisterListener(), this)
-
         logger.info("${ChatColor.GREEN}Project Economy plugin has enabled!")
     }
 

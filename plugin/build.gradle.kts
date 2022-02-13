@@ -1,6 +1,10 @@
 group = rootProject.group
 version = rootProject.version
 
+dependencies {
+    implementation("org.apache.commons:commons-io:1.3.2")
+}
+
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()

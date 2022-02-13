@@ -14,17 +14,9 @@ class InitSQL(private val plugin: JavaPlugin) {
     private val username     = plugin.config.getString("SQL_USERNAME")
     private val password     = plugin.config.getString("SQL_PASSWORD")
     private val port         = plugin.config.getInt("SQL_PORT")
-    private val moneyUnit    = plugin.config.getString("MONEY_UNIT")
-
-    init {
-        dbName     = databaseName
-        moneyUnits = moneyUnit
-    }
 
     companion object {
         lateinit var connection: Connection
-        var moneyUnits: String? = null
-        var dbName: String?     = null
     }
 
     fun connect() {
@@ -59,13 +51,13 @@ class InitSQL(private val plugin: JavaPlugin) {
         val statement: Statement = connection.createStatement()
         statement.executeUpdate("create database if not exists $databaseName default character set utf8;")
         statement.executeUpdate("use ${databaseName};")
-        statement.executeUpdate(
-            "create table if not exists account(" +
-                    "`uuid` varchar(36) not null," +
-                    "`amount` int not null," +
-                    "primary key (uuid)," +
-                    "unique index (username)" +
-                    ");"
+        statement.executeUpdate("""
+            create table if not exists account(
+                `uuid` varchar(36) not null,
+                `amount` int not null,
+                primary key (uuid)
+            );
+            """.trimIndent()
         )
     }
 }

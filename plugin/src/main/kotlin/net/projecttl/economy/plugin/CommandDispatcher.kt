@@ -1,10 +1,8 @@
 package net.projecttl.economy.plugin
 
 import net.kyori.adventure.text.Component
-import net.projecttl.economy.plugin.utils.Economy
-import net.projecttl.economy.plugin.utils.moneyUnit
+import net.projecttl.economy.plugin.utils.*
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -13,141 +11,165 @@ import org.bukkit.entity.Player
 
 object CommandDispatcher : CommandExecutor, TabCompleter {
 
+    private fun getPlayer(argument: String): Player {
+        return Bukkit.getPlayer(argument)!!
+    }
+
+    private fun Player.checkPerm(): Boolean {
+        if (!this.isOp) {
+            this.sendMessage("§c접근 권한이 없습니다.")
+            return false
+        }
+
+        return true
+    }
+
+    private fun Player.getOnline(): Boolean {
+        if (!this.isOnline) {
+            this.sendMessage("§e${this.name}§c은(는) 온라인이 아닙니다.")
+            return false
+        }
+
+        return true
+    }
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.name == "money") {
-            if (sender is Player) {
-                val economy = Economy(sender)
-                instance.connect()
+        when (command.name) {
+            "money" -> {
+                if (sender is Player) {
+                    val economy = Economy(sender)
+                    if (args.isEmpty()) {
+                        sender.sendMessage("계정 잔고: §a${economy.money}$moneyUnit")
+                        return true
+                    }
 
-                if (args.isEmpty()) {
-                    sender.sendMessage("Your account balance: ${ChatColor.GREEN}${economy.money}${moneyUnit()}")
-                    return false
-                } else {
-                    if (args[0] == "send") {
-                        val name = args[0]
-                        val amount = Integer.parseInt(args[1])
+                    when (args[0]) {
+                        "send" -> {
+                            val target = getPlayer(args[1])
+                            val amount = Integer.parseInt(args[2])
 
-                        val target = Bukkit.getPlayer(name)
-                        val targetAccount = Economy(target!!)
+                            val targetAccount = Economy(target)
+                            if (!target.getOnline()) return true
 
-                        if (!target.isOnline) {
-                            sender.sendMessage("${ChatColor.GOLD}${target.name} is offline!")
-                        } else {
                             if (economy.money < amount) {
-                                sender.sendMessage("${ChatColor.RED}You cannot send more than the amount you have.")
+                                sender.sendMessage("§c당신이 가진 금액보다 더 많이 보낼 수 없습니다.")
+                                return true
                             } else if (economy.money <= 0 || amount <= 0) {
-                                sender.sendMessage("${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
-                            } else {
-                                economy.subtractMoney(amount)
-                                targetAccount.addMoney(amount)
-
-                                sender.sendMessage("You have successfully sent ${amount}${moneyUnit()} to ${target.name}")
-                                target.sendMessage("You received $amount${moneyUnit()} from ${sender.name}")
+                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
+                                return true
                             }
+
+                            economy.subtractMoney(amount)
+                            targetAccount.addMoney(amount)
+
+                            sender.sendMessage("§e${sender.name}§a에게 ${amount}${moneyUnit}이(가) 전송 되었습니다.")
+                            target.sendMessage("§e${sender.name}로부터 ${amount}${moneyUnit}을(를) 받았습니다.")
+
+                            return true
                         }
+                        "rank" -> {
+                            economy.getRanking()
+                            return true
+                        }
+                        "account" -> {
+                            economy.showAccount()
+                            return true
+                        }
+                        "add" -> {
+                            if (!sender.checkPerm()) return true
 
-                        return true
-                    } else if (args[0] == "rank") {
-                        economy.getRanking()
-                        return true
-                    } else if (args[0] == "account") {
-                        instance.connect()
-                        economy.showAccount()
-
-                        return true
-                    } else if (args[0] == "add") {
-                        instance.connect()
-                        if (sender.isOp) {
-                            val name = args[1]
+                            val target = getPlayer(args[1])
                             val amount = Integer.parseInt(args[2])
 
-                            val target = Bukkit.getPlayer(name)
-                            val targetAccount = Economy(target!!)
+                            val targetAccount = Economy(target)
 
-                            if (amount >= 0) {
-                                if (!target.isOnline) {
-                                    sender.sendMessage("${ChatColor.GOLD}${target.name} is offline!")
-                                } else {
-                                    targetAccount.addMoney(amount)
-                                    sender.sendMessage("${ChatColor.GREEN}Now ${target.name}'s account balance is $amount${moneyUnit()}")
-                                }
-                            } else {
-                                sender.sendMessage("${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
+                            if (amount < 0) {
+                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
+                                return true
                             }
-                        }
 
-                        return true
-                    } else if (args[0] == "remove") {
-                        instance.connect()
-                        if (sender.isOp) {
-                            val name = args[1]
+                            if (!target.getOnline()) {
+                                return true
+                            }
+
+                            targetAccount.addMoney(amount)
+                            sender.sendMessage(
+                                "§a설정된 §e${target.name}§a의 계정 잔액은 ${targetAccount.money}${moneyUnit}입니다."
+                            )
+
+                            return true
+                        }
+                        "subtract" -> {
+                            if (!sender.checkPerm()) return true
+
+                            val target = getPlayer(args[1])
                             val amount = Integer.parseInt(args[2])
 
-                            if (amount >= 0) {
-                                val target = Bukkit.getPlayer(name)
-                                val targetAccount = Economy(target!!)
+                            val targetAccount = Economy(target)
 
-                                if (!target.isOnline) {
-                                    sender.sendMessage("${ChatColor.GOLD}${target.name} is offline!")
-                                } else {
-                                    targetAccount.subtractMoney(amount)
-                                    sender.sendMessage("${ChatColor.GREEN}Now ${target.name}'s account balance is $amount${moneyUnit()}")
-                                }
-                            } else {
-                                sender.sendMessage("${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
+                            if (amount < 0) {
+                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
+                                return true
                             }
-                        }
 
-                        return true
-                    } else if (args[0] == "set") {
-                        instance.connect()
-                        if (sender.isOp()) {
-                            val name = args[1]
+                            if (!target.getOnline()) {
+                                return true
+                            }
+
+                            targetAccount.subtractMoney(amount)
+                            sender.sendMessage("§a설정된 §e${sender.name}§a의 계정 잔액은 ${amount}${moneyUnit}입니다.")
+
+                            return true
+                        }
+                        "set" -> {
+                            if (!sender.checkPerm()) return true
+
+                            val target = getPlayer(args[1])
                             val amount = Integer.parseInt(args[2])
 
-                            if (amount >= 0) {
-                                val target = Bukkit.getPlayer(name)
-                                val targetAccount = Economy(target!!)
+                            val targetAccount = Economy(target)
 
-                                if (!target.isOnline) {
-                                    sender.sendMessage("${ChatColor.GOLD}${target.name} is offline!")
-                                } else {
-                                    targetAccount.money = amount
-                                    sender.sendMessage("${ChatColor.GREEN}Now ${target.name}'s account balance is $amount${moneyUnit()}")
-                                }
-                            } else {
-                                sender.sendMessage("${ChatColor.RED}Balance must not be less of 0${moneyUnit()}")
+                            if (amount < 0) {
+                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
+                                return true
                             }
-                        } else {
-                            sender.sendMessage("${ChatColor.RED}You're not OP!")
-                        }
 
-                        return true
-                    } else if (args[0] == "query") {
-                        instance.connect()
-                        if (sender.isOp) {
+                            if (!target.getOnline()) return true
+
+                            targetAccount.money = amount
+                            sender.sendMessage(
+                                "§a설정된 §e${target.name}§a의 계정 잔액은 ${targetAccount.money}${moneyUnit}입니다."
+                            )
+
+                            return true
+                        }
+                        "query" -> {
+                            if (!sender.checkPerm()) return true
+
                             economy.queryList()
-                        } else {
-                            sender.sendMessage("${ChatColor.RED}You're not OP!")
+                            return true
                         }
-
-                        return true
-                    } else if (args[0] == "moneyunit") {
-                        instance.connect()
-                        val unit = args[1]
-                        if (sender.isOp()) {
+                        "moneyunit" -> {
+                            val unit = args[1]
+                            if (!sender.checkPerm()) return true
+                        
                             if (unit == "") {
-                                sender.sendMessage("${ChatColor.RED}Money Unit must not be null!")
-                            } else {
-                                instance.config.set("MONEY_UNIT", unit)
-                                Bukkit.broadcast(Component.text("${ChatColor.GREEN}Now your server money unit is this: ${ChatColor.WHITE}$unit"))
-                                Bukkit.broadcast(Component.text("${ChatColor.GOLD}If you wanna change money unit, please type reload command or restart server."))
+                                sender.sendMessage("§c화폐 단위는 공백일 수 없습니다.")
+                                return true
                             }
-                        } else {
-                            sender.sendMessage("${ChatColor.RED}You're not OP!")
+                        
+                            instance.config.set("MONEY_UNIT", unit)
+                            Bukkit.broadcast(
+                                Component.text(
+                                    """
+                                        §a이제 서버 화폐 단위는 다음과 같습니다: §f<unit>
+                                        §6화폐 단위를 적용하려면 reload 명령을 입력하거나 서버를 다시 시작하십시오.
+                                    """.trimIndent()
+                                )
+                            )
+                    
+                            return true
                         }
-
-                        return true
                     }
                 }
             }
@@ -159,17 +181,25 @@ object CommandDispatcher : CommandExecutor, TabCompleter {
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String>? {
         val arr = mutableListOf<String>()
 
-        if (args.size == 1) {
-            arr.add("account")
-            arr.add("add")
-            arr.add("moneyunit")
-            arr.add("query")
-            arr.add("rank")
-            arr.add("remove")
-            arr.add("send")
-            arr.add("set")
+        when (command.name) {
+            "money" -> {
+                when (args.size) {
+                    0 -> return null
+                    1 -> {
+                        arr.add("account")
+                        arr.add("add")
+                        arr.add("moneyunit")
+                        arr.add("query")
+                        arr.add("rank")
+                        arr.add("remove")
+                        arr.add("send")
+                        arr.add("set")
+                        arr.add("lang")
 
-            return arr
+                        return arr
+                    }
+                }
+            }
         }
 
         return null
