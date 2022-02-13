@@ -18,7 +18,7 @@ private fun loadPlugin(plugin: JavaPlugin) {
     logger.info("project-economy API has successful loaded!")
 }
 
-class EconomyAPI(player: Player, plugin: JavaPlugin) {
+class EconomyAPI(val player: Player, val plugin: JavaPlugin) {
 
     val economy = Economy(player)
 
