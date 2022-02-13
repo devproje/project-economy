@@ -10,8 +10,3 @@ commands:
     aliases:
       - money
       - economy
-
-  exchanger:
-    description: This is gui exchanger
-    usage: /exchanger
-    aliases: [ex]

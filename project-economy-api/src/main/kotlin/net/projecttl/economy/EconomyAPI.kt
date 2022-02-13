@@ -1,28 +1,26 @@
 package net.projecttl.economy
 
 import net.projecttl.economy.plugin.utils.*
-import net.projecttl.economy.plugin.utils.moneyUnit
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Logger
+private val logger: Logger = Bukkit.getServer().logger
 
-private val moneyUnit: String = InitSQL.moneyUnits.toString()
-
-fun moneyUnit(): String {
-    return if (moneyUnit.length > 3) {
-        " $moneyUnit"
-    } else {
-        moneyUnit
+private fun loadPlugin(plugin: JavaPlugin) {
+    if (Bukkit.getServer().pluginManager.getPlugin("project-economy") == null) {
+        logger.info("${ChatColor.RED}This API must required project-economy plugin!")
+        Bukkit.getServer().pluginManager.disablePlugin(plugin)
+        return
     }
-}
 
-fun economyOf(player: Player, plugin: JavaPlugin): EconomyAPI {
-    return EconomyAPI(player, plugin)
+    logger.info("project-economy API has successful loaded!")
 }
 
 class EconomyAPI(player: Player, plugin: JavaPlugin) {
 
-    private val economy = Economy(player)
+    val economy = Economy(player)
 
     init {
         loadPlugin(plugin)
@@ -38,11 +36,11 @@ class EconomyAPI(player: Player, plugin: JavaPlugin) {
 
     var moneyUnit: String
         get() {
-            return moneyUnit()
+            return moneyUnit
         }
 
         set(new_unit) {
-            setMoneyUnit(new_unit)
+            moneyUnit = new_unit
         }
 
     fun addMoney(amount: Int) {
@@ -51,30 +49,5 @@ class EconomyAPI(player: Player, plugin: JavaPlugin) {
 
     fun subtractMoney(amount: Int) {
         economy.subtractMoney(amount)
-    }
-
-    @Deprecated("Moved to subtractMoney()")
-    fun removeMoney(amount: Int) {
-        economy.subtractMoney(amount)
-    }
-
-    fun buy(item: ItemStack, amount: Int) {
-        economy.buy(item, amount)
-    }
-
-    fun sell(item: ItemStack, amount: Int) {
-        economy.sell(item, amount)
-    }
-
-    fun buySet(item: ItemStack) {
-        economy.buySet(item)
-    }
-
-    fun sellSet(item: ItemStack) {
-        economy.sellSet(item)
-    }
-
-    fun sellAll(item: ItemStack) {
-        economy.sellAll(item)
     }
 }

@@ -68,8 +68,8 @@ publishing {
                     }
                     scm {
                         connection.set("scm:git:https://github.com/DevProject04/${rootProject.name}.git")
-                        developerConnection.set("scm:git:https://github.com/ProjetTL12345/${rootProject.name}.git")
-                        url.set("https://github.com/ProjetTL12345/${rootProject.name}.git")
+                        developerConnection.set("scm:git:https://github.com/DevProject04/${rootProject.name}.git")
+                        url.set("https://github.com/DevProject04/${rootProject.name}.git")
                     }
                 }
             }

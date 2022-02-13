@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.projecttl"
-version = "2.0.0"
+version = "2.1.1"
 
 allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -26,15 +26,12 @@ allprojects {
 subprojects {
     repositories {
         mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
         maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://m2.dv8tion.net/releases")
-        maven("https://jitpack.io")
     }
 
     dependencies {
         implementation(kotlin("stdlib"))
         compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-        compileOnly("mysql:mysql-connector-java:8.0.26") // MySQL Adapter
+        compileOnly("mysql:mysql-connector-java:8.0.26")
     }
 }

@@ -2,16 +2,12 @@ group = rootProject.group
 version = rootProject.version
 
 dependencies {
-    implementation("io.github.monun:kommand-api:2.6.6")
+    implementation("org.apache.commons:commons-io:1.3.2")
 }
 
 tasks {
-    compileJava {
-        options.encoding = "UTF-8"
-    }
-
     compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_16.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     processResources {
@@ -27,7 +23,7 @@ tasks {
 
     shadowJar {
         archiveBaseName.set(rootProject.name)
-        archiveVersion.set("")
+        archiveVersion.set(rootProject.version.toString())
         archiveClassifier.set("")
     }
 }
