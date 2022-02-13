@@ -52,7 +52,7 @@ publishing {
                 pom {
                     name.set(rootProject.name)
                     description.set("This is minecraft gui library")
-                    url.set("https://github.com/ProjectTL12345/${rootProject.name}")
+                    url.set("https://github.com/DevProject04/${rootProject.name}")
                     licenses {
                         license {
                             name.set("GNU General Public License Version 3")
