@@ -15,7 +15,6 @@ class Economy(val player: Player) {
             while (res.next()) {
                 return res.getInt("amount")
             }
-
             return 0
         }
         set(value) {
@@ -24,17 +23,24 @@ class Economy(val player: Player) {
             )
         }
 
-    fun addMoney(amount: Int) {
+    fun addMoney(amount: Int): Boolean {
+        if (amount <= 0) return false
         money += amount
+        return true
     }
 
-    fun subtractMoney(amount: Int) {
-        if (amount > money) {
-            player.sendMessage("§c계좌에 잔금이 부족합니다.\n§a현재 잔금§r: ${amount}$moneyUnit")
-            return
-        }
-
+    fun payMoney(amount: Int): Boolean {
+        if (amount < 0) return false
+        if (money < amount) return false
         money -= amount
+        return true
+    }
+
+    fun subtractMoney(amount: Int): Boolean {
+        if (amount <= 0) return false
+        if (money < amount) money = 0
+        else money -= amount
+        return true
     }
 
     fun getRanking() {
@@ -44,7 +50,7 @@ class Economy(val player: Player) {
         var i = 1
         while (resultSets.next()) {
             val username = Bukkit.getPlayer(resultSets.getString("uuid"))?.name
-            val amount   = resultSets.getInt("amount")
+            val amount = resultSets.getInt("amount")
 
             when (i) {
                 1 -> {
