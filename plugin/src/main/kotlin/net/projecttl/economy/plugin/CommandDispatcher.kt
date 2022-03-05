@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 object CommandDispatcher : CommandExecutor, TabCompleter {
 
     private enum class Arg { account, rank, send }
-    private enum class ArgOP { add, moneyunit, query, subtract, set }
+    private enum class ArgOP { add, unit, query, subtract, set }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val economy = if (sender is Player) Economy(sender)
@@ -160,7 +160,7 @@ object CommandDispatcher : CommandExecutor, TabCompleter {
                 economy.queryList()
                 return true
             }
-            ArgOP.moneyunit.name -> {
+            ArgOP.unit.name -> {
                 if (args.size != 2) {
                     sender.sendMessage("§c/$label ${args.first()} <Unit>")
                     return true
@@ -207,7 +207,7 @@ object CommandDispatcher : CommandExecutor, TabCompleter {
                 if (!sender.isOp) return list
                 if (args.size == 2) for (player in players) if (player.name.contains(args.last())) list.add(player.name)
             }
-            ArgOP.moneyunit.name -> {
+            ArgOP.unit.name -> {
                 if (!sender.isOp) return list
                 if (args.size == 2) if (args.last() == "") list.add("<Unit>")
             }
