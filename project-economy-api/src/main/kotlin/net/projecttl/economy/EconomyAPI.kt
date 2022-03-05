@@ -14,8 +14,6 @@ private fun loadPlugin(plugin: JavaPlugin) {
         Bukkit.getServer().pluginManager.disablePlugin(plugin)
         return
     }
-
-    logger.info("project-economy API has successful loaded!")
 }
 
 class EconomyAPI(val player: Player, val plugin: JavaPlugin) {

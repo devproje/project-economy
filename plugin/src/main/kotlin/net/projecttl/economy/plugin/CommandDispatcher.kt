@@ -1,8 +1,10 @@
 package net.projecttl.economy.plugin
 
 import net.kyori.adventure.text.Component
-import net.projecttl.economy.plugin.utils.*
+import net.projecttl.economy.plugin.utils.Economy
+import net.projecttl.economy.plugin.utils.moneyUnit
 import org.bukkit.Bukkit
+import org.bukkit.Bukkit.getPlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -11,197 +13,206 @@ import org.bukkit.entity.Player
 
 object CommandDispatcher : CommandExecutor, TabCompleter {
 
-    private fun getPlayer(argument: String): Player {
-        return Bukkit.getPlayer(argument)!!
-    }
-
-    private fun Player.checkPerm(): Boolean {
-        if (!this.isOp) {
-            this.sendMessage("§c접근 권한이 없습니다.")
-            return false
-        }
-
-        return true
-    }
-
-    private fun Player.getOnline(): Boolean {
-        if (!this.isOnline) {
-            this.sendMessage("§e${this.name}§c은(는) 온라인이 아닙니다.")
-            return false
-        }
-
-        return true
-    }
+    private enum class Arg { account, rank, send }
+    private enum class ArgOP { add, moneyunit, query, subtract, set }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        when (command.name) {
-            "money" -> {
-                if (sender is Player) {
-                    val economy = Economy(sender)
-                    if (args.isEmpty()) {
-                        sender.sendMessage("계정 잔고: §a${economy.money}$moneyUnit")
-                        return true
-                    }
+        val economy = if (sender is Player) Economy(sender)
+        else null
+        if (args.isEmpty()) {
+            economy ?: return false
+            sender.sendMessage("계정 잔고: §a${economy.money}$moneyUnit")
+            return true
+        }
+        when (args.first()) {
+            Arg.rank.name -> {
+                economy ?: return false
+                economy.getRanking()
+                return true
+            }
+            Arg.send.name -> {
+                economy ?: return false
+                if (args.size != 3) {
+                    sender.sendMessage("§c/$label ${args.first()} <PlayerName> <Amount>")
+                    return true
+                }
+                val target = getPlayer(args[1])
+                val amount = args.last().toIntOrNull()
+                if (target == null) {
+                    sender.sendMessage("§c대상을 찾을 수 없습니다.")
+                    return true
+                }
+                if (amount == null) {
+                    sender.sendMessage("§c${args.last()} 은/는 정수가 아닙니다.")
+                    return true
+                }
 
-                    when (args[0]) {
-                        "send" -> {
-                            val target = getPlayer(args[1])
-                            val amount = Integer.parseInt(args[2])
+                if (!economy.subtractMoney(amount)) {
+                    if (economy.money < amount) sender.sendMessage("§c잔액이 부족합니다.")
+                    sender.sendMessage("§c${args.last()} 은/는 양수가 아닙니다.")
+                    return true
+                }
 
-                            val targetAccount = Economy(target)
-                            if (!target.getOnline()) return true
+                val targetAccount = Economy(target)
 
-                            if (economy.money < amount) {
-                                sender.sendMessage("§c당신이 가진 금액보다 더 많이 보낼 수 없습니다.")
-                                return true
-                            } else if (economy.money <= 0 || amount <= 0) {
-                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
-                                return true
-                            }
+                economy.subtractMoney(amount)
+                targetAccount.addMoney(amount)
 
-                            economy.subtractMoney(amount)
-                            targetAccount.addMoney(amount)
+                sender.sendMessage("§e${sender.name} §a님 에게 §e${amount}§a${moneyUnit} 을/를 보냈습니다.")
+                target.sendMessage("§e${sender.name} §a님 으로부터 §e${amount}§a${moneyUnit}을/를 받았습니다.")
 
-                            sender.sendMessage("§e${sender.name}§a에게 ${amount}${moneyUnit}이(가) 전송 되었습니다.")
-                            target.sendMessage("§e${sender.name}로부터 ${amount}${moneyUnit}을(를) 받았습니다.")
+                return true
+            }
+            Arg.account.name -> {
+                economy ?: return false
+                economy.showAccount()
+                return true
+            }
+            ArgOP.add.name -> {
+                if (!sender.isOp) return true
+                if (args.size != 3) {
+                    sender.sendMessage("§c/$label ${args.first()} <PlayerName> <Amount>")
+                    return true
+                }
+                val target = getPlayer(args[1])
+                val amount = args.last().toIntOrNull()
+                if (target == null) {
+                    sender.sendMessage("§c대상을 찾을 수 없습니다.")
+                    return true
+                }
+                if (amount == null) {
+                    sender.sendMessage("§c${args.last()} 은/는 정수가 아닙니다.")
+                    return true
+                }
 
-                            return true
-                        }
-                        "rank" -> {
-                            economy.getRanking()
-                            return true
-                        }
-                        "account" -> {
-                            economy.showAccount()
-                            return true
-                        }
-                        "add" -> {
-                            if (!sender.checkPerm()) return true
+                val targetAccount = Economy(target)
 
-                            val target = getPlayer(args[1])
-                            val amount = Integer.parseInt(args[2])
+                if (!targetAccount.addMoney(amount)) {
+                    sender.sendMessage("§c${args.last()} 은/는 양수가 아닙니다.")
+                    return true
+                }
 
-                            val targetAccount = Economy(target)
+                sender.sendMessage("§e${sender.name} §a님 에게 §e${amount}§a${moneyUnit} 을/를 추가 했습니다.")
+                target.sendMessage("§e관리자§a로부터 §e${amount}§a${moneyUnit}을/를 받았습니다.")
 
-                            if (amount < 0) {
-                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
-                                return true
-                            }
+                return true
+            }
+            ArgOP.subtract.name -> {
+                if (!sender.isOp) return true
+                if (args.size != 3) {
+                    sender.sendMessage("§c/$label ${args.first()} <PlayerName> <Amount>")
+                    return true
+                }
+                val target = getPlayer(args[1])
+                val amount = args.last().toIntOrNull()
 
-                            if (!target.getOnline()) {
-                                return true
-                            }
+                if (target == null) {
+                    sender.sendMessage("§c대상을 찾을 수 없습니다.")
+                    return true
+                }
+                if (amount == null) {
+                    sender.sendMessage("§c${args.last()} 은/는 정수가 아닙니다.")
+                    return true
+                }
 
-                            targetAccount.addMoney(amount)
-                            sender.sendMessage(
-                                "§a설정된 §e${target.name}§a의 계정 잔액은 ${targetAccount.money}${moneyUnit}입니다."
-                            )
+                val targetAccount = Economy(target)
+                targetAccount.subtractMoney(amount)
 
-                            return true
-                        }
-                        "subtract" -> {
-                            if (!sender.checkPerm()) return true
+                sender.sendMessage("§a설정된 §e${sender.name}§a의 계정 잔액은 ${amount}${moneyUnit}입니다.")
 
-                            val target = getPlayer(args[1])
-                            val amount = Integer.parseInt(args[2])
+                return true
+            }
+            ArgOP.set.name -> {
+                if (!sender.isOp) return true
+                if (args.size != 3) {
+                    sender.sendMessage("§c/$label ${args.first()} <PlayerName> <Amount>")
+                    return true
+                }
+                val target = getPlayer(args[1])
+                val amount = args.last().toIntOrNull()
 
-                            val targetAccount = Economy(target)
+                if (target == null) {
+                    sender.sendMessage("§c대상을 찾을 수 없습니다.")
+                    return true
+                }
+                if (amount == null) {
+                    sender.sendMessage("§c${args.last()} 은/는 정수가 아닙니다.")
+                    return true
+                }
 
-                            if (amount < 0) {
-                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
-                                return true
-                            }
+                val targetAccount = Economy(target)
 
-                            if (!target.getOnline()) {
-                                return true
-                            }
+                if (amount < 0) {
+                    sender.sendMessage("§c${args.last()} 은/는 양수가 아닙니다.")
+                    return true
+                }
 
-                            targetAccount.subtractMoney(amount)
-                            sender.sendMessage("§a설정된 §e${sender.name}§a의 계정 잔액은 ${amount}${moneyUnit}입니다.")
+                targetAccount.money = amount
+                sender.sendMessage(
+                    "§e${target.name} §a님의 계정 잔액이 §e${targetAccount.money}§a${moneyUnit}으/로 설정 되었습니다."
+                )
 
-                            return true
-                        }
-                        "set" -> {
-                            if (!sender.checkPerm()) return true
+                return true
+            }
+            ArgOP.query.name -> {
+                if (!sender.isOp) return true
+                economy ?: return false
+                economy.queryList()
+                return true
+            }
+            ArgOP.moneyunit.name -> {
+                if (args.size != 2) {
+                    sender.sendMessage("§c/$label ${args.first()} <Unit>")
+                    return true
+                }
+                val unit = args[1]
+                if (!sender.isOp) return true
 
-                            val target = getPlayer(args[1])
-                            val amount = Integer.parseInt(args[2])
+                if (unit == "") {
+                    sender.sendMessage("§c화폐 단위는 공백일 수 없습니다.")
+                    return true
+                }
 
-                            val targetAccount = Economy(target)
-
-                            if (amount < 0) {
-                                sender.sendMessage("§c잔액은 0${moneyUnit}보다 작아서는 안 됩니다.")
-                                return true
-                            }
-
-                            if (!target.getOnline()) return true
-
-                            targetAccount.money = amount
-                            sender.sendMessage(
-                                "§a설정된 §e${target.name}§a의 계정 잔액은 ${targetAccount.money}${moneyUnit}입니다."
-                            )
-
-                            return true
-                        }
-                        "query" -> {
-                            if (!sender.checkPerm()) return true
-
-                            economy.queryList()
-                            return true
-                        }
-                        "moneyunit" -> {
-                            val unit = args[1]
-                            if (!sender.checkPerm()) return true
-                        
-                            if (unit == "") {
-                                sender.sendMessage("§c화폐 단위는 공백일 수 없습니다.")
-                                return true
-                            }
-                        
-                            instance.config.set("MONEY_UNIT", unit)
-                            Bukkit.broadcast(
-                                Component.text(
-                                    """
+                instance.config.set("MONEY_UNIT", unit)
+                Bukkit.broadcast(
+                    Component.text(
+                        """
                                         §a이제 서버 화폐 단위는 다음과 같습니다: §f<unit>
                                         §6화폐 단위를 적용하려면 reload 명령을 입력하거나 서버를 다시 시작하십시오.
                                     """.trimIndent()
-                                )
-                            )
-                    
-                            return true
-                        }
-                    }
-                }
+                    )
+                )
+
+                return true
             }
         }
-
         return false
     }
 
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String>? {
-        val arr = mutableListOf<String>()
-
-        when (command.name) {
-            "money" -> {
-                when (args.size) {
-                    0 -> return null
-                    1 -> {
-                        arr.add("account")
-                        arr.add("add")
-                        arr.add("moneyunit")
-                        arr.add("query")
-                        arr.add("rank")
-                        arr.add("remove")
-                        arr.add("send")
-                        arr.add("set")
-                        arr.add("lang")
-
-                        return arr
-                    }
-                }
-            }
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
+        val list = mutableListOf<String>()
+        val players = Bukkit.getOnlinePlayers()
+        if (args.size == 1) {
+            for (s in Arg.values()) if (s.name.contains(args.last())) list.add(s.name)
+            if (sender.isOp) for (s in ArgOP.values()) if (s.name.contains(args.last())) list.add(s.name)
+            return list
         }
-
-        return null
+        if (args.size > 1) when (args.first()) {
+            Arg.send.name -> {
+                if (args.size == 2) for (player in players) if (player.name.contains(args.last())) list.add(player.name)
+            }
+            ArgOP.add.name,
+            ArgOP.subtract.name,
+            ArgOP.set.name -> {
+                if (!sender.isOp) return list
+                if (args.size == 2) for (player in players) if (player.name.contains(args.last())) list.add(player.name)
+            }
+            ArgOP.moneyunit.name -> {
+                if (!sender.isOp) return list
+                if (args.size == 2) if (args.last() == "") list.add("<Unit>")
+            }
+            else -> return list
+        }
+        return list
     }
 }
