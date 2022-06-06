@@ -1,0 +1,7 @@
+DB_URL: ""
+DB_PORT: 3306
+DB_NAME: "project_work"
+DB_USERNAME: ""
+DB_PASSWORD: ""
+
+MONEY_UNIT: "₩"

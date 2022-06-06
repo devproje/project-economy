@@ -1,28 +1,22 @@
 package net.projecttl.economy
 
-import net.projecttl.economy.plugin.utils.*
+import net.projecttl.economy.core.Economy
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.logging.Logger
-private val logger: Logger = Bukkit.getServer().logger
 
-private fun loadPlugin(plugin: JavaPlugin) {
+private fun JavaPlugin.load() {
     if (Bukkit.getServer().pluginManager.getPlugin("project-economy") == null) {
         logger.info("${ChatColor.RED}This API must required project-economy plugin!")
-        Bukkit.getServer().pluginManager.disablePlugin(plugin)
+        Bukkit.getServer().pluginManager.disablePlugin(this)
         return
     }
 }
 
-class EconomyAPI(val player: Player, val plugin: JavaPlugin) {
+class EconomyAPI(val plugin: JavaPlugin, val player: Player) {
 
     val economy = Economy(player)
-
-    init {
-        loadPlugin(plugin)
-    }
 
     var money: Int
         get() {
@@ -45,7 +39,11 @@ class EconomyAPI(val player: Player, val plugin: JavaPlugin) {
         economy.addMoney(amount)
     }
 
-    fun subtractMoney(amount: Int) {
-        economy.subtractMoney(amount)
+    fun dropMoney(amount: Int) {
+        economy.dropMoney(amount)
+    }
+
+    init {
+        plugin.load()
     }
 }

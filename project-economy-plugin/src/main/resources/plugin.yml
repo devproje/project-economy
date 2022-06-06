@@ -1,0 +1,4 @@
+name: ${rootProject.name}
+version: ${project.version}
+api-version: 1.18
+main: net.projecttl.economy.plugin.ProjectEconomy

@@ -1,6 +1,6 @@
-package net.projecttl.economy.plugin.utils
+package net.projecttl.economy.core.utils
 
-import net.projecttl.economy.plugin.instance
+import net.projecttl.economy.core.instance
 
 var moneyUnit: String
     get() {

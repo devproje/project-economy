@@ -6,10 +6,6 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
-dependencies {
-    compileOnly(project(":${rootProject.name}-core"))
-}
-
 tasks {
     javadoc {
         options.encoding = "UTF-8"
@@ -29,7 +25,7 @@ tasks {
 
 publishing {
     publications {
-        create<MavenPublication>("${rootProject.name}-api") {
+        create<MavenPublication>("${rootProject.name}-core") {
             from(components["java"])
             artifact(tasks["sourcesJar"])
             artifact(tasks["javadocJar"])
@@ -79,5 +75,5 @@ publishing {
 
 signing {
     isRequired = true
-    sign(publishing.publications["${rootProject.name}-api"])
+    sign(publishing.publications["${rootProject.name}-core"])
 }
