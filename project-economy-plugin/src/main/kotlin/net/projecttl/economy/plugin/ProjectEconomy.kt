@@ -19,13 +19,14 @@ class ProjectEconomy : JavaPlugin() {
             this.saveDefaultConfig()
         }
 
+
         val model: DatabaseCredential = try {
             DatabaseCredential(
-                    config.getString("DB_URL")!!,
-                    config.getInt("DB_PORT"),
-                    config.getString("DB_NAME")!!,
-                    config.getString("DB_USERNAME")!!,
-                    config.getString("DB_PASSWORD")!!
+                config.getString("DB_URL")!!,
+                config.getInt("DB_PORT"),
+                config.getString("DB_NAME")!!,
+                config.getString("DB_USERNAME")!!,
+                config.getString("DB_PASSWORD")!!
             )
         } catch (exception: Exception) {
             logger.info("${ChatColor.RED}Please type database credentials!")
