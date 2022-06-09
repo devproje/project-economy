@@ -1,5 +1,6 @@
 package net.projecttl.economy.plugin
 
+import io.github.monun.kommand.kommand
 import net.projecttl.economy.core.Database
 import net.projecttl.economy.core.model.DatabaseCredential
 import net.projecttl.economy.plugin.listeners.RegisterListener
@@ -35,6 +36,10 @@ class ProjectEconomy : JavaPlugin() {
 
         database = Database(model)
         database.connect()
+
+        kommand {
+            CommandDispatcher.register(this)
+        }
 
         server.pluginManager.registerEvents(RegisterListener(), this)
         logger.info("${ChatColor.GREEN}Project Economy plugin has enabled!")
