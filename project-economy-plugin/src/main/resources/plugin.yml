@@ -2,5 +2,19 @@ name: ${rootProject.name}
 version: ${project.version}
 api-version: 1.18
 main: net.projecttl.economy.plugin.ProjectEconomy
-libraries:
-  - io.github.monun:kommand-core:2.10.0
+commands:
+  money:
+    description: 돈 커맨드 입니다.
+    usage: /money <options> <name> <amount>
+    aliases:
+      - 돈
+  send:
+    description: 송금 커맨드 입니다.
+    usage: /send <player> <amount>
+    aliases:
+      - 송금
+  settings:
+    description: 플러그인 설정 커맨드 입니다.
+    usage: /settings <options> <values>
+    aliases:
+      - 설정

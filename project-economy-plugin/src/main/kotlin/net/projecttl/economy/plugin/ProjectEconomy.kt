@@ -1,6 +1,5 @@
 package net.projecttl.economy.plugin
 
-import io.github.monun.kommand.kommand
 import net.projecttl.economy.core.Database
 import net.projecttl.economy.core.model.DatabaseCredential
 import net.projecttl.economy.plugin.listeners.RegisterListener
@@ -37,8 +36,19 @@ class ProjectEconomy : JavaPlugin() {
         database = Database(model)
         database.connect()
 
-        kommand {
-            CommandDispatcher.register(this)
+        getCommand("money")?.apply {
+            setExecutor(CommandDispatcher)
+            tabCompleter = CommandDispatcher
+        }
+
+        getCommand("send")?.apply {
+            setExecutor(CommandDispatcher)
+            tabCompleter = CommandDispatcher
+        }
+
+        getCommand("settings")?.apply {
+            setExecutor(CommandDispatcher)
+            tabCompleter = CommandDispatcher
         }
 
         server.pluginManager.registerEvents(RegisterListener(), this)

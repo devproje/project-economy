@@ -31,7 +31,6 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib"))
-        implementation("io.github.monun:kommand-api:2.10.0")
         compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
         compileOnly("mysql:mysql-connector-java:8.0.26")
     }
