@@ -37,7 +37,7 @@ object CommandDispatcher : CommandExecutor, TabCompleter {
                     Bukkit.getPlayer(args[1])!!
                 } catch (exception: Exception) {
                     sender.sendMessage(Component.text(
-                        "올바른 플레이어의 이름을 입력해 주세요.",
+                        "이 서버에 있는 온라인 플레이어의 이름을 입력해 주세요.",
                         NamedTextColor.RED
                     ))
                     return false
