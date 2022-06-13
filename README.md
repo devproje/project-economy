@@ -2,15 +2,29 @@
 This is minecraft plugin MySQL money system.
 
 ## Command List
-This is plugin command /economy or /money
-- Show account balance
+- Check account balance
 ```mclang
-/money account
+/money
+```
+
+- Add player's money
+```mclang
+/money add <another_player> <amount>
+```
+
+- Subtract player's money
+```mclang
+/money drop <another_player> <amount>
+```
+
+- Query accounts
+```mclang
+/money query
 ```
 
 - Send money
 ```mclang
-/money send <another_player>
+/send <another_player> <amount>
 ```
 
 ## How to use API
