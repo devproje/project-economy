@@ -1,11 +1,11 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("org.jetbrains.dokka") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
+    id("org.jetbrains.dokka") version "1.6.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "net.projecttl"
-version = "2.1.3"
+group = property("group")!!
+version = property("version")!!
 
 allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -31,7 +31,7 @@ subprojects {
 
     dependencies {
         implementation(kotlin("stdlib"))
-        compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
         compileOnly("mysql:mysql-connector-java:8.0.26")
     }
 }

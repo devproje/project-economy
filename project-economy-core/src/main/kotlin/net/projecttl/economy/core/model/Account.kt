@@ -1,4 +1,4 @@
-package net.projecttl.economy.plugin.utils
+package net.projecttl.economy.core.model
 
 import java.util.*
 
