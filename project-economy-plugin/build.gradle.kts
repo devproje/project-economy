@@ -3,6 +3,7 @@ version = rootProject.version
 
 dependencies {
     implementation(project(":${rootProject.name}-core"))
+    implementation("io.github.monun:kommand-api:2.12.0")
 }
 
 tasks {
@@ -21,9 +22,9 @@ tasks {
         from(sourceSets["main"].allSource)
     }
 
-    shadowJar {
+    create<Jar>("paperJar") {
+        from(sourceSets["main"].output)
         archiveBaseName.set(rootProject.name)
-        archiveVersion.set(rootProject.version.toString())
-        archiveClassifier.set("")
+        archiveVersion.set(project.version.toString())
     }
 }

@@ -2,6 +2,8 @@ name: ${rootProject.name}
 version: ${project.version}
 api-version: 1.18
 main: net.projecttl.economy.plugin.ProjectEconomy
+libraries:
+  - io.github.monun:kommand-api:2.12.0
 commands:
   money:
     description: 돈 커맨드 입니다.

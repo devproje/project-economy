@@ -1,5 +1,7 @@
 package net.projecttl.economy.plugin
 
+import io.github.monun.kommand.PluginKommand
+import io.github.monun.kommand.getValue
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.projecttl.economy.core.Economy
@@ -13,6 +15,45 @@ import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
 object CommandDispatcher : CommandExecutor, TabCompleter {
+
+    fun register(kommand: PluginKommand) {
+        kommand.register("economy") {
+            requires { isPlayer }
+            executes {
+                val acc = Economy(player)
+                acc.showAccount(sender)
+            }
+
+            then("query") {
+                requires { isOp }
+                executes {
+                    sender.queryAccount()
+                }
+            }
+
+            then("show") {
+                then ("name" to string()) {
+                    requires { isOp }
+                    executes {
+                        val name: String by it
+                        val target: Player = try {
+                            Bukkit.getPlayer(name)!!
+                        } catch (exception: Exception) {
+                            sender.sendMessage(Component.text(
+                                "이 서버에 있는 온라인 플레이어의` 이름을 입력해 주세요.",
+                                NamedTextColor.RED
+                            ))
+
+                            return@executes
+                        }
+
+                        val account = Economy(target)
+                        account.showAccount(sender)
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         return when (command.name) {
